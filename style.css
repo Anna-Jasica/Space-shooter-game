@@ -12,10 +12,9 @@ body {
     height: 100vh;
 }
 
-button {
+#startButton {
     width: 30vw;
     height: 20vh;
     border-radius: 10px;
     font-size: 40px;
-
 }
