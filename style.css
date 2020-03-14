@@ -29,6 +29,11 @@ body {
 .enemy {
     width: 25px;
     height: 25px;
-    background-color: violet;
+    background-color: red;
+    position: fixed;
+}
+
+#ship {
+    width: 100px;
     position: fixed;
 }

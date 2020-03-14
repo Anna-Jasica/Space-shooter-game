@@ -28,8 +28,10 @@ function update() {
 document.addEventListener("mousemove", shipTrack);
 
 function shipTrack(e) {
-  let positionX = e.screenX;
-  let positionY = e.screenY;
+  let positionX = e.clientX;
+  let positionY = e.clientY;
+  document.getElementById("ship").style.top = `${positionY}px`;
+  document.getElementById("ship").style.left = `${positionX}px`;
 }
 
 function handleEnemies() {
