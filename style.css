@@ -17,5 +17,11 @@ button {
     height: 20vh;
     border-radius: 10px;
     font-size: 40px;
+}
 
+.bullet {
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    position: fixed;
 }
