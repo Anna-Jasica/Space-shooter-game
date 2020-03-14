@@ -2,15 +2,10 @@ const btn = document.getElementById("startButton");
 
 function buttonClick() {
     btn.style.display = "none";
-    document.getElementById("main").style.cursor = 'url("spaceship.jpg"), auto';
+    document.getElementById("main").style.cursor = "none";
 }
 
 btn.addEventListener("click", buttonClick);
-const state = {
-    bullets: [],
-    enemies: []
-};
-
 function init() {
     window.addEventListener("click", fire);
 }
@@ -20,22 +15,8 @@ function fire(event) {
     bullet.classList.add("bullet");
     bullet.style.top = `${event.y}px`;
     bullet.style.left = `${event.x}px`;
-    document.getElementById("space-shooter").appendChild(bullet);
-    console.log("pew pew pew");
-}
-
-function update() {
-    console.log("LIVE");
-}
-
-function startGame() {
-    init();
-    // window.requestAnimationFrame();
-    const bullet = document.createElement("div");
-    bullet.classList.add("bullet");
-    bullet.style.top = `${event.y}px`;
-    bullet.style.left = `${event.x}px`;
     document.getElementById("main").appendChild(bullet);
+    console.log("pew pew pew");
 }
 
 function update() {
@@ -62,14 +43,6 @@ function startGame() {
 }
 
 startGame();
-console.log("TEST");
-
-// class Coordinates {
-//     constructor(x, y) {
-//         this.x = x;
-//         this.y = y;
-//     }
-// }
 
 class Bullet {
     constructor(x, y) {
