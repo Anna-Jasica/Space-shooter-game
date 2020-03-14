@@ -2,6 +2,7 @@ const btn = document.getElementById("startButton");
 
 function buttonClick() {
   btn.style.display = "none";
+  document.getElementById("main").style.cursor = 'url("spaceship.jpg"), auto';
 }
 
 btn.addEventListener("click", buttonClick);
