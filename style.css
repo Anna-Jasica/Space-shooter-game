@@ -25,3 +25,10 @@ body {
     background-color: red;
     position: fixed;
 }
+
+.enemy {
+    width: 25px;
+    height: 25px;
+    background-color: violet;
+    position: fixed;
+}
