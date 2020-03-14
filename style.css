@@ -1,0 +1,21 @@
+body {
+    background-color: black;
+    color: white;
+    overflow: hidden;
+
+}
+
+#main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+button {
+    width: 30vw;
+    height: 20vh;
+    border-radius: 10px;
+    font-size: 40px;
+
+}
