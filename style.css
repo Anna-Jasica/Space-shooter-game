@@ -17,4 +17,14 @@ body {
     height: 20vh;
     border-radius: 10px;
     font-size: 40px;
+<<<<<<< HEAD
+=======
+}
+
+.bullet {
+    width: 5px;
+    height: 5px;
+    background-color: red;
+    position: fixed;
+>>>>>>> be9c92ce5b229f297c09184cd8e7df8d2f8ddcf9
 }
