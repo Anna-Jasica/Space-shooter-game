@@ -1,8 +1,12 @@
 const btn = document.getElementById("startButton");
+const ship = document.getElementById("ship");
 
 function buttonClick() {
   btn.style.display = "none";
+  ship.style.display = "block";
   document.getElementById("main").style.cursor = "none";
+  document.addEventListener("mousemove", shipTrack);
+  startGame();
 }
 
 btn.addEventListener("click", buttonClick);
@@ -24,8 +28,6 @@ function update() {
   handleBullets();
   window.requestAnimationFrame(update);
 }
-
-document.addEventListener("mousemove", shipTrack);
 
 function shipTrack(e) {
   let positionX = e.clientX;
@@ -75,8 +77,6 @@ function startGame() {
   update();
   setInterval(spawnEnemy, 1000);
 }
-
-startGame();
 
 function getRandomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
