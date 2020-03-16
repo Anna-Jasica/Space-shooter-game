@@ -1,5 +1,5 @@
 body {
-    background-color: black;
+    background: url(background.jpg);
     color: white;
     overflow: hidden;
 
@@ -22,7 +22,7 @@ body {
 .bullet {
     width: 5px;
     height: 5px;
-    background-color: red;
+    background-color: gold;
     position: fixed;
 }
 
