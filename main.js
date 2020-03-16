@@ -32,8 +32,8 @@ function update() {
 function shipTrack(e) {
   let positionX = e.clientX;
   let positionY = e.clientY;
-  document.getElementById("ship").style.top = `${positionY}px`;
-  document.getElementById("ship").style.left = `${positionX}px`;
+  document.getElementById("ship").style.top = `${positionY - 39}px`;
+  document.getElementById("ship").style.left = `${positionX - 80}px`;
 }
 
 function handleEnemies() {

@@ -36,5 +36,6 @@ body {
 #ship {
     display: none;
     width: 80px;
+    height: 80px;
     position: fixed;
 }
