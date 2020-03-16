@@ -1,6 +1,9 @@
 const btn = document.getElementById("startButton");
 const ship = document.getElementById("ship");
 
+const ENEMY_SPEED = 4;
+const BULLET_SPEED = 3;
+
 function buttonClick() {
     btn.style.display = "none";
     ship.style.display = "block";
@@ -39,7 +42,7 @@ function shipTrack(e) {
 function handleEnemies() {
     const enemies = document.getElementsByClassName("enemy");
     for (enemy of enemies) {
-        enemy.style.left = `${+enemy.style.left.slice(0, -2) - 1}px`;
+        enemy.style.left = `${+enemy.style.left.slice(0, -2) - ENEMY_SPEED}px`;
         // if (!isBulletWithinScreen(enemy)) {
         //     enemy.remove();
         // }
@@ -58,7 +61,8 @@ function spawnEnemy() {
 function handleBullets() {
     const bullets = document.getElementsByClassName("bullet");
     for (bullet of bullets) {
-        bullet.style.left = `${+bullet.style.left.slice(0, -2) + 1}px`;
+        bullet.style.left = `${+bullet.style.left.slice(0, -2) +
+            BULLET_SPEED}px`;
         if (isEnemyHit(bullet)) {
             bullet.remove();
         }
@@ -106,7 +110,7 @@ function isBulletWithinScreen(bullet) {
 function startGame() {
     init();
     update();
-    setInterval(spawnEnemy, 3000);
+    setInterval(spawnEnemy, 1000);
 }
 
 function getRandomInteger(min, max) {
