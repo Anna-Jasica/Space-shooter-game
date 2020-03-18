@@ -46,3 +46,14 @@ body {
     height: 80px;
     position: fixed;
 }
+
+#gameOver {
+    width: 30vw;
+    height: 15vh;
+    border-radius: 10px;
+    font-size: 40px;
+    background-color: red;
+    display: none;
+    text-align: center;
+    padding-top: 7vh;
+}

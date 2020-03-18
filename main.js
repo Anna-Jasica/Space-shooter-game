@@ -1,6 +1,7 @@
 const ENEMY_SPEED = 3;
 const BULLET_SPEED = 3;
 const ENEMY_SPAWN_TIME = 1000;
+let intervalId;
 
 function init() {
     document.getElementById("startButton").style.display = "none";
@@ -33,7 +34,7 @@ function shipTrack(e) {
 
 function startGame() {
     update();
-    setInterval(() => spawnEnemy(), ENEMY_SPAWN_TIME);
+    intervalId = setInterval(() => spawnEnemy(), ENEMY_SPAWN_TIME);
 }
 
 function update() {
@@ -61,13 +62,23 @@ function handleEnemies() {
         if (Number(enemy.style.left.slice(0, -2)) < 0) {
             // remove enemy from html (needed in case 1 not killed enemy doesn't lose game)
             // stop game and display game over
-            // console.log("game over");
+            enemy.remove();
+            gameOver();
+            console.log("game over");
         }
         if (isShipCollision(enemy)) {
             // stop game and display game over
             console.log("game over");
         }
     }
+}
+
+function gameOver() {
+    const gameOver = document.getElementById("gameOver");
+    document.getElementById("ship").style.display = "none";
+    clearInterval(intervalId);
+    gameOver.style.display = "block";
+    gameOver.innerText = "Game Over!";
 }
 
 function isShipCollision(enemy) {
@@ -134,6 +145,7 @@ function isEnemyHit(bullet) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -192,13 +204,3 @@ class Coordinates {
         return Math.abs(coordinates1.x - coordinates2.x);
     }
 }
-
-// function enemyOut() {
-//   const enemies = document.getElementsByClassName("enemy");
-//   for (enemy of enemies) {
-//     console.log(enemy.style.left);
-//     if (Number(enemy.style.left.slice(0, -2)) < 0) {
-//       console.log("game over");
-//     }
-//   }
-// }
