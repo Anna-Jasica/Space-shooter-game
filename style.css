@@ -12,6 +12,13 @@ body {
     height: 100vh;
 }
 
+#scoreboard {
+    text-align: center;
+    position: fixed;
+    top: 0;
+    color: yellow
+}
+
 #startButton {
     width: 30vw;
     height: 20vh;

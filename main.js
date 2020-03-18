@@ -102,7 +102,6 @@ function handleBullets() {
         bullet.style.left = `${+bullet.style.left.slice(0, -2) +
             BULLET_SPEED}px`;
         if (isEnemyHit(bullet)) {
-            // here we can add points for kill (or even better in isEnemyHit function)
             bullet.remove();
         }
         if (!isBulletWithinScreen(bullet)) {
@@ -130,12 +129,17 @@ function isEnemyHit(bullet) {
             bulletCoordinates.calculateVerticalDistance(enemyCoordinates) <
                 enemyHeight / 2
         ) {
-            // here we should add points for kill
+            increaseKillCount();
             enemy.remove();
             return true;
         }
     }
     return false;
+}
+
+function increaseKillCount() {
+    const killCount = document.getElementById("killCount").innerText;
+    document.getElementById("killCount").innerText = +killCount + 1;
 }
 
 function isBulletWithinScreen(bullet) {
