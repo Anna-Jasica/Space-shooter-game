@@ -1,4 +1,4 @@
-const ENEMY_SPEED = 0;
+const ENEMY_SPEED = 4;
 const BULLET_SPEED = 3;
 const ENEMY_SPAWN_TIME = 1000;
 
@@ -30,7 +30,7 @@ function shipTrack(e) {
 
 function startGame() {
     update();
-    spawnEnemy();
+    setInterval(() => spawnEnemy(), ENEMY_SPAWN_TIME);
 }
 
 function update() {
