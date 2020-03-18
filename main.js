@@ -1,10 +1,11 @@
-const ENEMY_SPEED = 4;
+const ENEMY_SPEED = 3;
 const BULLET_SPEED = 3;
 const ENEMY_SPAWN_TIME = 1000;
 
 function init() {
     document.getElementById("startButton").style.display = "none";
     document.getElementById("ship").style.display = "block";
+    document.getElementById("ship").setAttribute("draggable", false);
     document.getElementById("main").style.cursor = "none";
 
     window.addEventListener("click", fire);
@@ -13,19 +14,21 @@ function init() {
 }
 
 function fire(event) {
-    const bullet = document.createElement("div");
+    const bullet = document.createElement("img");
+    bullet.src = "bullet.png";
     bullet.classList.add("bullet");
-    bullet.style.top = `${event.y}px`;
-    bullet.style.left = `${event.x}px`;
     document.getElementById("main").appendChild(bullet);
+    bullet.style.top = `${event.y - getHeight(bullet) / 2}px`;
+    bullet.style.left = `${event.x}px`;
     console.log("pew pew pew");
 }
 
 function shipTrack(e) {
     let positionX = e.clientX;
     let positionY = e.clientY;
-    document.getElementById("ship").style.top = `${positionY - 39}px`;
-    document.getElementById("ship").style.left = `${positionX - 80}px`;
+    const ship = document.getElementById("ship");
+    ship.style.top = `${positionY - getHeight(ship) / 2}px`;
+    ship.style.left = `${positionX - getWidth(ship) / 2}px`;
 }
 
 function startGame() {
@@ -42,12 +45,12 @@ function update() {
 function spawnEnemy() {
     const enemy = document.createElement("div");
     enemy.classList.add("enemy");
+    document.getElementById("main").appendChild(enemy);
     enemy.style.top = `${getRandomInteger(
         0,
-        window.innerHeight - getComputedStyle(enemy).height.slice(0, -2)
+        window.innerHeight - getHeight(enemy)
     )}px`;
     enemy.style.left = `${window.innerWidth}px`;
-    document.getElementById("main").appendChild(enemy);
     console.log("am am am");
 }
 
@@ -69,15 +72,15 @@ function handleEnemies() {
 
 function isShipCollision(enemy) {
     const ship = document.getElementById("ship");
-    const shipWidth = getComputedStyle(ship).width.slice(0, -2);
-    const shipHeight = getComputedStyle(ship).height.slice(0, -2);
+    const shipWidth = getWidth(ship);
+    const shipHeight = getHeight(ship);
     const shipCoordinates = new Coordinates(
         +ship.style.left.slice(0, -2) + shipWidth / 2,
         +ship.style.top.slice(0, -2) + shipHeight / 2
     );
 
-    const enemyWidth = getComputedStyle(enemy).width.slice(0, -2);
-    const enemyHeight = getComputedStyle(enemy).height.slice(0, -2);
+    const enemyWidth = getWidth(enemy);
+    const enemyHeight = getHeight(enemy);
     const enemyCoordinates = new Coordinates(
         +enemy.style.left.slice(0, -2) + enemyWidth / 2, // give center position, not corner
         +enemy.style.top.slice(0, -2) + enemyHeight / 2 // give center position, not corner
@@ -110,15 +113,13 @@ function handleBullets() {
 
 function isEnemyHit(bullet) {
     const bulletCoordinates = new Coordinates(
-        +bullet.style.left.slice(0, -2) +
-            getComputedStyle(bullet).width.slice(0, -2) / 2,
-        +bullet.style.top.slice(0, -2) +
-            getComputedStyle(bullet).height.slice(0, -2) / 2
+        +bullet.style.left.slice(0, -2) + getWidth(bullet) / 2,
+        +bullet.style.top.slice(0, -2) + getHeight(bullet) / 2
     );
     const enemies = document.getElementsByClassName("enemy");
     for (enemy of enemies) {
-        const enemyWidth = getComputedStyle(enemy).width.slice(0, -2);
-        const enemyHeight = getComputedStyle(enemy).height.slice(0, -2);
+        const enemyWidth = getWidth(enemy);
+        const enemyHeight = getHeight(enemy);
         const enemyCoordinates = new Coordinates(
             +enemy.style.left.slice(0, -2) + enemyWidth / 2, // give center position, not corner
             +enemy.style.top.slice(0, -2) + enemyHeight / 2 // give center position, not corner
@@ -146,6 +147,14 @@ function isBulletWithinScreen(bullet) {
 
 function getRandomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getHeight(element) {
+    return getComputedStyle(element).height.slice(0, -2);
+}
+
+function getWidth(element) {
+    return getComputedStyle(element).width.slice(0, -2);
 }
 
 // function isCollide(a, b) {

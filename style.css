@@ -20,9 +20,9 @@ body {
 }
 
 .bullet {
-    width: 5px;
-    height: 5px;
-    background-color: gold;
+    width: 80px;
+    height: 80px;
+    /* background-color: gold; */
     position: fixed;
 }
 
