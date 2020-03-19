@@ -24,6 +24,7 @@ body {
     height: 20vh;
     border-radius: 10px;
     font-size: 40px;
+    cursor: pointer;
 }
 
 .bullet {

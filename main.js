@@ -68,6 +68,8 @@ function handleEnemies() {
         }
         if (isShipCollision(enemy)) {
             // stop game and display game over
+            enemy.remove();
+            gameOver();
             console.log("game over");
         }
     }
@@ -79,6 +81,7 @@ function gameOver() {
     clearInterval(intervalId);
     gameOver.style.display = "block";
     gameOver.innerText = "Game Over!";
+    document.getElementById("main").style.cursor = "auto";
 }
 
 function isShipCollision(enemy) {
@@ -150,8 +153,8 @@ function isEnemyHit(bullet) {
 }
 
 function increaseKillCount() {
-    const killCount = document.getElementById("killCount").innerText;
-    document.getElementById("killCount").innerText = +killCount + 1;
+    document.getElementById("killCount").innerText =
+        +document.getElementById("killCount").innerText + 1;
 }
 
 function isBulletWithinScreen(bullet) {
