@@ -5,6 +5,8 @@ let intervalId;
 
 function init() {
     document.getElementById("startButton").style.display = "none";
+    document.getElementById("endButton").style.display = "none";
+    document.getElementById("gameOver").style.display = "none";
     document.getElementById("ship").style.display = "block";
     document.getElementById("ship").setAttribute("draggable", false);
     document.getElementById("main").style.cursor = "none";
@@ -80,6 +82,7 @@ function gameOver() {
     document.getElementById("ship").style.display = "none";
     clearInterval(intervalId);
     gameOver.style.display = "block";
+    endButton.style.display = "block";
     gameOver.innerText = "Game Over!";
     document.getElementById("main").style.cursor = "auto";
 }
