@@ -156,8 +156,7 @@ function isEnemyHit(bullet) {
 }
 
 function increaseKillCount() {
-    document.getElementById("killCount").innerText =
-        +document.getElementById("killCount").innerText + 1;
+    document.getElementById("killCount").innerText++;
 }
 
 function isBulletWithinScreen(bullet) {
