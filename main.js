@@ -2,6 +2,7 @@ const ENEMY_SPEED = 3;
 const BULLET_SPEED = 3;
 const ENEMY_SPAWN_TIME = 1000;
 let intervalId;
+let isGameRunning = false;
 
 function init() {
     document.getElementById("startButton").style.display = "none";
@@ -23,6 +24,7 @@ function fire(event) {
     document.getElementById("main").appendChild(bullet);
     bullet.style.top = `${event.y - getHeight(bullet) / 2}px`;
     bullet.style.left = `${event.x}px`;
+    bullet.setAttribute("draggable", false);
     console.log("pew pew pew");
 }
 
@@ -35,7 +37,11 @@ function shipTrack(e) {
 }
 
 function startGame() {
-    update();
+    if (!isGameRunning) {
+        update();
+        isGameRunning = true;
+    }
+
     intervalId = setInterval(() => spawnEnemy(), ENEMY_SPAWN_TIME);
 }
 
@@ -80,6 +86,7 @@ function handleEnemies() {
 
 function gameOver() {
     const gameOver = document.getElementById("gameOver");
+    window.removeEventListener("click", fire);
     document.getElementById("ship").style.display = "none";
     clearInterval(intervalId);
     gameOver.style.display = "block";
@@ -105,9 +112,9 @@ function isShipCollision(enemy) {
     );
     if (
         shipCoordinates.calculateHorizontalDistance(enemyCoordinates) <
-            shipWidth / 2 &&
+        shipWidth / 2 &&
         shipCoordinates.calculateVerticalDistance(enemyCoordinates) <
-            shipHeight / 2
+        shipHeight / 2
     ) {
         return true;
     }
@@ -143,9 +150,9 @@ function isEnemyHit(bullet) {
         );
         if (
             bulletCoordinates.calculateHorizontalDistance(enemyCoordinates) <
-                enemyWidth / 2 &&
+            enemyWidth / 2 &&
             bulletCoordinates.calculateVerticalDistance(enemyCoordinates) <
-                enemyHeight / 2
+            enemyHeight / 2
         ) {
             increaseKillCount();
             enemy.remove();
