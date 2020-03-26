@@ -46,7 +46,8 @@ function update() {
 }
 
 function spawnEnemy() {
-    const enemy = document.createElement("div");
+    const enemy = document.createElement("img");
+    enemy.src = "alien.png";
     enemy.classList.add("enemy");
     document.getElementById("main").appendChild(enemy);
     enemy.style.top = `${getRandomInteger(

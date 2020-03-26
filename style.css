@@ -48,7 +48,7 @@ body {
 .enemy {
     width: 25px;
     height: 25px;
-    background-color: red;
+    /* background-color: red; */
     position: fixed;
 }
 
