@@ -52,6 +52,48 @@ body {
     position: fixed;
 }
 
+.explosion {
+    width: 25px;
+    height: 25px;
+    position: fixed;
+    -webkit-animation: fadeout 1.5s;
+    /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeout 1.5s;
+    /* Firefox < 16 */
+}
+
+@keyframes fadeout {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadeout {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadeout {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
 #ship {
     display: none;
     width: 80px;

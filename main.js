@@ -77,7 +77,7 @@ function handleEnemies() {
         }
         if (isShipCollision(enemy)) {
             // stop game and display game over
-            enemy.remove();
+            displayExplosion(enemy);
             gameOver();
             console.log("game over");
         }
@@ -89,6 +89,7 @@ function gameOver() {
     window.removeEventListener("click", fire);
     document.getElementById("ship").style.display = "none";
     clearInterval(intervalId);
+    resetKillCount();
     gameOver.style.display = "block";
     endButton.style.display = "block";
     gameOver.innerText = "Game Over!";
@@ -155,7 +156,8 @@ function isEnemyHit(bullet) {
             enemyHeight / 2
         ) {
             increaseKillCount();
-            enemy.remove();
+            displayExplosion(enemy);
+            // enemy.remove();
             return true;
         }
     }
@@ -163,8 +165,29 @@ function isEnemyHit(bullet) {
     return false;
 }
 
+function displayExplosion(enemy) {
+    enemy.src = "explosion2.png";
+    enemy.classList.remove("enemy");
+    enemy.classList.add("explosion");
+    setTimeout(() => enemy.remove(), 1000);
+    // const enemy = document.createElement("img");
+    // enemy.src = "alien.png";
+    // enemy.classList.add("enemy");
+    // document.getElementById("main").appendChild(enemy);
+    // enemy.style.top = `${getRandomInteger(
+    //     0,
+    //     window.innerHeight - getHeight(enemy)
+    // )}px`;
+    // enemy.style.left = `${window.innerWidth}px`;
+    // console.log("am am am");
+}
+
 function increaseKillCount() {
     document.getElementById("killCount").innerText++;
+}
+
+function resetKillCount() {
+    document.getElementById("killCount").innerText = 0;
 }
 
 function isBulletWithinScreen(bullet) {
