@@ -103,7 +103,7 @@ function getRandomDirection() {
 function handleEnemies() {
     const enemies = document.getElementsByClassName("enemy");
     for (enemy of enemies) {
-        move(enemy, Direction.LEFT);
+        move(enemy, getRandomDirection());
 
         if (Number(enemy.style.left.slice(0, -2)) < 0) {
             // remove enemy from html (needed in case 1 not killed enemy doesn't lose game)
