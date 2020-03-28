@@ -4,6 +4,13 @@ const ENEMY_SPAWN_TIME = 1000;
 let intervalId;
 let isGameRunning = false;
 
+const Direction = {
+    LEFT: "left",
+    RIGHT: "right",
+    DOWN: "down",
+    TOP: "top"
+};
+
 function init(event) {
     resetKillCount();
     shipTrack(event);
@@ -67,10 +74,37 @@ function spawnEnemy() {
     console.log("am am am");
 }
 
+function move(element, direction) {
+    switch (direction) {
+        case Direction.LEFT:
+            element.style.left = `${+element.style.left.slice(0, -2) -
+                ENEMY_SPEED}px`;
+            break;
+        case Direction.RIGHT:
+            element.style.left = `${+element.style.left.slice(0, -2) +
+                ENEMY_SPEED}px`;
+            break;
+        case Direction.DOWN:
+            element.style.top = `${+element.style.top.slice(0, -2) +
+                ENEMY_SPEED}px`;
+            break;
+        case Direction.TOP:
+            element.style.top = `${+element.style.top.slice(0, -2) -
+                ENEMY_SPEED}px`;
+            break;
+    }
+}
+
+function getRandomDirection() {
+    const directions = [Direction.LEFT, Direction.DOWN, Direction.TOP];
+    return directions[getRandomInteger(0, directions.length)];
+}
+
 function handleEnemies() {
     const enemies = document.getElementsByClassName("enemy");
     for (enemy of enemies) {
-        enemy.style.left = `${+enemy.style.left.slice(0, -2) - ENEMY_SPEED}px`;
+        move(enemy, Direction.LEFT);
+
         if (Number(enemy.style.left.slice(0, -2)) < 0) {
             // remove enemy from html (needed in case 1 not killed enemy doesn't lose game)
             // stop game and display game over
@@ -133,8 +167,8 @@ function isShipCollision(enemy) {
 function handleBullets() {
     const bullets = document.getElementsByClassName("bullet");
     for (bullet of bullets) {
-        bullet.style.left = `${+bullet.style.left.slice(0, -2) +
-            BULLET_SPEED}px`;
+        move(bullet, Direction.RIGHT);
+
         if (isEnemyHit(bullet)) {
             bullet.remove();
         }
