@@ -5,6 +5,7 @@ let intervalId;
 let isGameRunning = false;
 
 function init(event) {
+    resetKillCount();
     document.getElementById("startButton").style.display = "none";
     document.getElementById("endButton").style.display = "none";
     document.getElementById("gameOver").style.display = "none";
@@ -90,7 +91,6 @@ function gameOver() {
     window.removeEventListener("click", fire, true);
     document.getElementById("ship").style.display = "none";
     clearInterval(intervalId);
-    resetKillCount();
     gameOver.style.display = "block";
     endButton.style.display = "block";
     gameOver.innerText = "Game Over!";
