@@ -77,6 +77,7 @@ function handleEnemies() {
         }
         if (isShipCollision(enemy)) {
             // stop game and display game over
+            console.log(document);
             displayExplosion(enemy);
             gameOver();
             console.log("game over");
@@ -94,6 +95,11 @@ function gameOver() {
     endButton.style.display = "block";
     gameOver.innerText = "Game Over!";
     document.getElementById("main").style.cursor = "auto";
+    //remove all enemies and bullets from game
+    const enemies = document.getElementsByClassName("enemy");
+    Array.from(enemies).forEach(enemy => enemy.remove());
+    const bullets = document.getElementsByClassName("bullet");
+    Array.from(bullets).forEach(enemy => enemy.remove());
 }
 
 function isShipCollision(enemy) {
