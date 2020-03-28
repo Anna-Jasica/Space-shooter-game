@@ -6,6 +6,7 @@ let isGameRunning = false;
 
 function init(event) {
     resetKillCount();
+    shipTrack(event);
     document.getElementById("startButton").style.display = "none";
     document.getElementById("endButton").style.display = "none";
     document.getElementById("gameOver").style.display = "none";
@@ -20,11 +21,12 @@ function init(event) {
 
 function fire(event) {
     const bullet = document.createElement("img");
+    const ship = document.getElementById("ship");
     bullet.src = "bullet.png";
     bullet.classList.add("bullet");
     document.getElementById("main").appendChild(bullet);
-    bullet.style.top = `${event.y - getHeight(bullet) / 2}px`;
-    bullet.style.left = `${event.x}px`;
+    bullet.style.top = `${event.y}px`;
+    bullet.style.left = `${event.x + getWidth(ship) / 2}px`;
     bullet.setAttribute("draggable", false);
     console.log("pew pew pew");
 }
@@ -33,8 +35,8 @@ function shipTrack(e) {
     let positionX = e.clientX;
     let positionY = e.clientY;
     const ship = document.getElementById("ship");
-    ship.style.top = `${positionY - getHeight(ship) / 2}px`;
-    ship.style.left = `${positionX - getWidth(ship) / 2}px`;
+    ship.style.top = `${positionY}px`;
+    ship.style.left = `${positionX}px`;
 }
 
 function startGame() {
@@ -58,8 +60,8 @@ function spawnEnemy() {
     enemy.classList.add("enemy");
     document.getElementById("main").appendChild(enemy);
     enemy.style.top = `${getRandomInteger(
-        0,
-        window.innerHeight - getHeight(enemy)
+        getHeight(enemy) / 2,
+        window.innerHeight - getHeight(enemy) / 2
     )}px`;
     enemy.style.left = `${window.innerWidth}px`;
     console.log("am am am");
@@ -107,15 +109,15 @@ function isShipCollision(enemy) {
     const shipWidth = getWidth(ship);
     const shipHeight = getHeight(ship);
     const shipCoordinates = new Coordinates(
-        +ship.style.left.slice(0, -2) + shipWidth / 2,
-        +ship.style.top.slice(0, -2) + shipHeight / 2
+        +ship.style.left.slice(0, -2),
+        +ship.style.top.slice(0, -2)
     );
 
     const enemyWidth = getWidth(enemy);
     const enemyHeight = getHeight(enemy);
     const enemyCoordinates = new Coordinates(
-        +enemy.style.left.slice(0, -2) + enemyWidth / 2, // give center position, not corner
-        +enemy.style.top.slice(0, -2) + enemyHeight / 2 // give center position, not corner
+        +enemy.style.left.slice(0, -2), // give center position, not corner
+        +enemy.style.top.slice(0, -2) // give center position, not corner
     );
     if (
         shipCoordinates.calculateHorizontalDistance(enemyCoordinates) <
@@ -144,16 +146,16 @@ function handleBullets() {
 
 function isEnemyHit(bullet) {
     const bulletCoordinates = new Coordinates(
-        +bullet.style.left.slice(0, -2) + getWidth(bullet) / 2,
-        +bullet.style.top.slice(0, -2) + getHeight(bullet) / 2
+        +bullet.style.left.slice(0, -2),
+        +bullet.style.top.slice(0, -2)
     );
     const enemies = document.getElementsByClassName("enemy");
     for (enemy of enemies) {
         const enemyWidth = getWidth(enemy);
         const enemyHeight = getHeight(enemy);
         const enemyCoordinates = new Coordinates(
-            +enemy.style.left.slice(0, -2) + enemyWidth / 2, // give center position, not corner
-            +enemy.style.top.slice(0, -2) + enemyHeight / 2 // give center position, not corner
+            +enemy.style.left.slice(0, -2), // give center position, not corner
+            +enemy.style.top.slice(0, -2) // give center position, not corner
         );
         if (
             bulletCoordinates.calculateHorizontalDistance(enemyCoordinates) <
@@ -208,11 +210,11 @@ function getRandomInteger(min, max) {
 }
 
 function getHeight(element) {
-    return getComputedStyle(element).height.slice(0, -2);
+    return Number(getComputedStyle(element).height.slice(0, -2));
 }
 
 function getWidth(element) {
-    return getComputedStyle(element).width.slice(0, -2);
+    return Number(getComputedStyle(element).width.slice(0, -2));
 }
 
 // function isCollide(a, b) {
