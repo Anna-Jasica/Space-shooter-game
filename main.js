@@ -150,8 +150,10 @@ function gameOver() {
     gameOver.innerText = "Game Over!";
     document.getElementById("main").style.cursor = "auto";
     //remove all enemies and bullets from game
-    const enemies = document.getElementsByClassName("enemy");
-    Array.from(enemies).forEach(enemy => enemy.remove());
+    setTimeout(() => {
+        const enemies = document.getElementsByClassName("enemy");
+        Array.from(enemies).forEach(enemy => enemy.remove());
+    }, 0);
     const bullets = document.getElementsByClassName("bullet");
     Array.from(bullets).forEach(enemy => enemy.remove());
 }
