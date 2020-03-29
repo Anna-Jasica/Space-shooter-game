@@ -1,9 +1,10 @@
 const ENEMY_SPEED = 3;
-const BULLET_SPEED = 3;
+const BULLET_SPEED = 10;
 const ENEMY_SPAWN_TIME = 1000;
+const ENEMY_DIRECTION_REPEAT = 40;
 let intervalId;
 let isGameRunning = false;
-let direction;
+let frameNumber = 0;
 
 const Direction = {
     LEFT: "left",
@@ -21,7 +22,6 @@ function init(event) {
     document.getElementById("ship").style.display = "block";
     document.getElementById("ship").setAttribute("draggable", false);
     document.getElementById("main").style.cursor = "none";
-    console.log(event);
     window.addEventListener("click", fire, true);
     window.addEventListener("mousemove", shipTrack);
     startGame();
@@ -83,7 +83,7 @@ function move(element, direction) {
             break;
         case Direction.RIGHT:
             element.style.left = `${+element.style.left.slice(0, -2) +
-                ENEMY_SPEED}px`;
+                BULLET_SPEED}px`;
             break;
         case Direction.DOWN:
             element.style.top = `${+element.style.top.slice(0, -2) +
@@ -96,34 +96,51 @@ function move(element, direction) {
     }
 }
 
-function getRandomDirection() {
-    const directions = [Direction.LEFT, Direction.DOWN, Direction.TOP];
-    return directions[getRandomInteger(0, directions.length)];
-}
-
 function handleEnemies() {
     const enemies = document.getElementsByClassName("enemy");
     for (enemy of enemies) {
-        move(enemy, getRandomDirection());
-
+        handleEnemyMove(enemy);
         if (Number(enemy.style.left.slice(0, -2)) < 0) {
             // remove enemy from html (needed in case 1 not killed enemy doesn't lose game)
             // stop game and display game over
             enemy.remove();
             gameOver();
-            console.log("game over");
         }
         if (isShipCollision(enemy)) {
             // stop game and display game over
             console.log(document);
             displayExplosion(enemy);
             gameOver();
-            console.log("game over");
         }
     }
+    frameNumber++;
+}
+
+function handleEnemyMove(enemy) {
+    // if (frameNumber % 2 === 0) {
+    if (!enemy.getAttribute("direction")) {
+        move(enemy, Direction.LEFT);
+        enemy.setAttribute("direction", Direction.LEFT);
+    } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
+        const enemyYPosition = enemy.style.top.slice(0, -2);
+        let directions = [Direction.LEFT, Direction.TOP, Direction.DOWN];
+        if (enemyYPosition < window.innerHeight * 0.2) {
+            directions.splice(directions.indexOf(Direction.TOP), 1);
+        } else if (enemyYPosition > window.innerHeight * 0.2) {
+            directions.splice(directions.indexOf(Direction.DOWN), 1);
+        }
+        const direction =
+            directions[getRandomInteger(0, directions.length - 1)];
+        move(enemy, direction);
+        enemy.setAttribute("direction", direction);
+    } else {
+        move(enemy, enemy.getAttribute("direction"));
+    }
+    // }
 }
 
 function gameOver() {
+    console.log("game over");
     const gameOver = document.getElementById("gameOver");
     window.removeEventListener("click", fire, true);
     document.getElementById("ship").style.display = "none";
@@ -209,24 +226,12 @@ function isEnemyHit(bullet) {
 }
 
 function displayExplosion(enemy) {
-    enemy.src = "explosion2.png";
+    enemy.src = "explosion.png";
     setTimeout(() => {
         enemy.classList.remove("enemy");
         enemy.classList.add("explosion");
     }, 0);
-    // enemy.classList.remove("enemy");
-    // enemy.classList.add("explosion");
     setTimeout(() => enemy.remove(), 1000);
-    // const enemy = document.createElement("img");
-    // enemy.src = "alien.png";
-    // enemy.classList.add("enemy");
-    // document.getElementById("main").appendChild(enemy);
-    // enemy.style.top = `${getRandomInteger(
-    //     0,
-    //     window.innerHeight - getHeight(enemy)
-    // )}px`;
-    // enemy.style.left = `${window.innerWidth}px`;
-    // console.log("am am am");
 }
 
 function increaseKillCount() {
