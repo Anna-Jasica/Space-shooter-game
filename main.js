@@ -3,6 +3,7 @@ const BULLET_SPEED = 3;
 const ENEMY_SPAWN_TIME = 1000;
 let intervalId;
 let isGameRunning = false;
+let direction;
 
 const Direction = {
     LEFT: "left",
@@ -209,8 +210,12 @@ function isEnemyHit(bullet) {
 
 function displayExplosion(enemy) {
     enemy.src = "explosion2.png";
-    enemy.classList.remove("enemy");
-    enemy.classList.add("explosion");
+    setTimeout(() => {
+        enemy.classList.remove("enemy");
+        enemy.classList.add("explosion");
+    }, 0);
+    // enemy.classList.remove("enemy");
+    // enemy.classList.add("explosion");
     setTimeout(() => enemy.remove(), 1000);
     // const enemy = document.createElement("img");
     // enemy.src = "alien.png";
