@@ -1,12 +1,14 @@
 const ENEMY_SPEED = 3;
 const BULLET_SPEED = 10;
-const ENEMY_SPAWN_TIME = 1000;
+const ENEMY_SPAWN_TIME = 1500;
 const ENEMY_DIRECTION_REPEAT = 40;
 const ENEMY_HP = 3;
 const PLAYER_HP = 3;
-let intervalId;
+let spawnIntervalId;
 let isGameRunning = false;
 let frameNumber = 0;
+let intervalCycle = 0;
+let resetIntervalId;
 
 const Direction = {
     LEFT: "left",
@@ -55,7 +57,17 @@ function startGame() {
         isGameRunning = true;
     }
     resetCurrentHp();
-    intervalId = setInterval(() => spawnEnemy(), ENEMY_SPAWN_TIME);
+    spawnIntervalId = setInterval(spawnEnemy, ENEMY_SPAWN_TIME);
+    resetIntervalId = setInterval(changeInterval, 10000);
+}
+
+function changeInterval() {
+    clearInterval(spawnIntervalId);
+    intervalCycle++;
+    spawnIntervalId = setInterval(
+        spawnEnemy,
+        (ENEMY_SPAWN_TIME * 0.7) / intervalCycle
+    );
 }
 
 function update() {
@@ -157,7 +169,8 @@ function gameOver() {
     const gameOver = document.getElementById("gameOver");
     window.removeEventListener("click", fire, true);
     document.getElementById("ship").style.display = "none";
-    clearInterval(intervalId);
+    clearInterval(spawnIntervalId);
+    clearInterval(resetIntervalId);
     gameOver.style.display = "block";
     endButton.style.display = "block";
     gameOver.innerText = "Game Over!";
