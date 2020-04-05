@@ -2,6 +2,8 @@ const ENEMY_SPEED = 3;
 const BULLET_SPEED = 10;
 const ENEMY_SPAWN_TIME = 1000;
 const ENEMY_DIRECTION_REPEAT = 40;
+const ENEMY_HP = 3;
+const PLAYER_HP = 3;
 let intervalId;
 let isGameRunning = false;
 let frameNumber = 0;
@@ -10,7 +12,7 @@ const Direction = {
     LEFT: "left",
     RIGHT: "right",
     DOWN: "down",
-    TOP: "top"
+    TOP: "top",
 };
 
 function init(event) {
@@ -52,7 +54,7 @@ function startGame() {
         update();
         isGameRunning = true;
     }
-
+    resetCurrentHp();
     intervalId = setInterval(() => spawnEnemy(), ENEMY_SPAWN_TIME);
 }
 
@@ -64,6 +66,7 @@ function update() {
 
 function spawnEnemy() {
     const enemy = document.createElement("img");
+    enemy.setAttribute("hp", ENEMY_HP);
     enemy.src = "alien.png";
     enemy.classList.add("enemy");
     document.getElementById("main").appendChild(enemy);
@@ -78,20 +81,24 @@ function spawnEnemy() {
 function move(element, direction) {
     switch (direction) {
         case Direction.LEFT:
-            element.style.left = `${+element.style.left.slice(0, -2) -
-                ENEMY_SPEED}px`;
+            element.style.left = `${
+                +element.style.left.slice(0, -2) - ENEMY_SPEED
+            }px`;
             break;
         case Direction.RIGHT:
-            element.style.left = `${+element.style.left.slice(0, -2) +
-                BULLET_SPEED}px`;
+            element.style.left = `${
+                +element.style.left.slice(0, -2) + BULLET_SPEED
+            }px`;
             break;
         case Direction.DOWN:
-            element.style.top = `${+element.style.top.slice(0, -2) +
-                ENEMY_SPEED}px`;
+            element.style.top = `${
+                +element.style.top.slice(0, -2) + ENEMY_SPEED
+            }px`;
             break;
         case Direction.TOP:
-            element.style.top = `${+element.style.top.slice(0, -2) -
-                ENEMY_SPEED}px`;
+            element.style.top = `${
+                +element.style.top.slice(0, -2) - ENEMY_SPEED
+            }px`;
             break;
     }
 }
@@ -103,14 +110,20 @@ function handleEnemies() {
         if (Number(enemy.style.left.slice(0, -2)) < 0) {
             // remove enemy from html (needed in case 1 not killed enemy doesn't lose game)
             // stop game and display game over
+            decreaseCurrentHp();
             enemy.remove();
-            gameOver();
+            if (getCurrentHp() === 0) {
+                gameOver();
+            }
         }
         if (isShipCollision(enemy)) {
             // stop game and display game over
-            console.log(document);
+            decreaseCurrentHp();
             displayExplosion(enemy);
-            gameOver();
+            if (getCurrentHp() === 0) {
+                console.log(document);
+                gameOver();
+            }
         }
     }
     frameNumber++;
@@ -152,10 +165,10 @@ function gameOver() {
     //remove all enemies and bullets from game
     setTimeout(() => {
         const enemies = document.getElementsByClassName("enemy");
-        Array.from(enemies).forEach(enemy => enemy.remove());
+        Array.from(enemies).forEach((enemy) => enemy.remove());
     }, 0);
     const bullets = document.getElementsByClassName("bullet");
-    Array.from(bullets).forEach(enemy => enemy.remove());
+    Array.from(bullets).forEach((enemy) => enemy.remove());
 }
 
 function isShipCollision(enemy) {
@@ -217,9 +230,14 @@ function isEnemyHit(bullet) {
             bulletCoordinates.calculateVerticalDistance(enemyCoordinates) <
                 enemyHeight / 2
         ) {
-            increaseKillCount();
-            displayExplosion(enemy);
-            // enemy.remove();
+            let currentEnemyHP = enemy.getAttribute("hp");
+            enemy.setAttribute("hp", --currentEnemyHP);
+            console.log(currentEnemyHP);
+            if (currentEnemyHP === 0) {
+                increaseKillCount();
+                displayExplosion(enemy);
+                // enemy.remove();
+            }
             return true;
         }
     }
@@ -242,6 +260,18 @@ function increaseKillCount() {
 
 function resetKillCount() {
     document.getElementById("killCount").innerText = 0;
+}
+
+function decreaseCurrentHp() {
+    document.getElementById("hpCount").innerText--;
+}
+
+function resetCurrentHp() {
+    document.getElementById("hpCount").innerText = PLAYER_HP;
+}
+
+function getCurrentHp() {
+    return Number(document.getElementById("hpCount").innerText);
 }
 
 function isBulletWithinScreen(bullet) {

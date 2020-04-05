@@ -19,6 +19,14 @@ body {
     color: yellow;
 }
 
+#currentHp {
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 10px;
+    color: yellow;
+}
+
 #startButton {
     width: 30vw;
     height: 20vh;
