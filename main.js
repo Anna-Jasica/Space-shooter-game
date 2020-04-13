@@ -4,6 +4,7 @@ const ENEMY_SPAWN_TIME = 1500;
 const ENEMY_DIRECTION_REPEAT = 40;
 const ENEMY_HP = 3;
 const PLAYER_HP = 3;
+let currentPlayerHp;
 let spawnIntervalId;
 let isGameRunning = false;
 let frameNumber = 0;
@@ -124,7 +125,7 @@ function handleEnemies() {
             // stop game and display game over
             decreaseCurrentHp();
             enemy.remove();
-            if (getCurrentHp() === 0) {
+            if (currentPlayerHp === 0) {
                 gameOver();
             }
         }
@@ -132,7 +133,7 @@ function handleEnemies() {
             // stop game and display game over
             decreaseCurrentHp();
             displayExplosion(enemy);
-            if (getCurrentHp() === 0) {
+            if (currentPlayerHp === 0) {
                 console.log(document);
                 gameOver();
             }
@@ -276,15 +277,13 @@ function resetKillCount() {
 }
 
 function decreaseCurrentHp() {
-    document.getElementById("hpCount").innerText--;
+    currentPlayerHp--;
+    displayHp(currentPlayerHp);
 }
 
 function resetCurrentHp() {
-    document.getElementById("hpCount").innerText = PLAYER_HP;
-}
-
-function getCurrentHp() {
-    return Number(document.getElementById("hpCount").innerText);
+    currentPlayerHp = PLAYER_HP;
+    displayHp(currentPlayerHp);
 }
 
 function isBulletWithinScreen(bullet) {
@@ -306,6 +305,18 @@ function getWidth(element) {
     return Number(getComputedStyle(element).width.slice(0, -2));
 }
 
+function displayHp(value) {
+    const currentHpDiv = document.getElementById("currentHp");
+    currentHpDiv.innerHTML = "";
+    for (let i = 0; i < value; i++) {
+        const ship = document.createElement("img");
+        ship.classList.add("hpUnit");
+        ship.src = "newship.png";
+        currentHpDiv.appendChild(ship);
+        // ship.src =
+    }
+    // currentHpDiv.innerHTML =
+}
 // function isCollide(a, b) {
 //     return !(
 //         ((a.y + a.height) < (b.y)) ||
