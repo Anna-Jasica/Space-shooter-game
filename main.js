@@ -1,6 +1,6 @@
-const ENEMY_SPEED = 3;
+const ENEMY_SPEED = 1;
 const BULLET_SPEED = 10;
-const ENEMY_SPAWN_TIME = 1500;
+const ENEMY_SPAWN_TIME = 3500;
 const ENEMY_DIRECTION_REPEAT = 40;
 const ENEMY_HP = 3;
 const PLAYER_HP = 3;
@@ -10,6 +10,10 @@ let isGameRunning = false;
 let frameNumber = 0;
 let intervalCycle = 0;
 let resetIntervalId;
+
+state = {
+    weaponPower: 1,
+};
 
 const Direction = {
     LEFT: "left",
@@ -58,6 +62,8 @@ function startGame() {
         isGameRunning = true;
     }
     resetCurrentHp();
+    resetWeaponPower();
+    // spawnEnemy();
     spawnIntervalId = setInterval(spawnEnemy, ENEMY_SPAWN_TIME);
     resetIntervalId = setInterval(changeInterval, 10000);
 }
@@ -74,6 +80,7 @@ function changeInterval() {
 function update() {
     handleEnemies();
     handleBullets();
+    handleUpgrades();
     window.requestAnimationFrame(update);
 }
 
@@ -132,7 +139,7 @@ function handleEnemies() {
         if (isShipCollision(enemy)) {
             // stop game and display game over
             decreaseCurrentHp();
-            displayExplosion(enemy);
+            handleEnemyKill(enemy);
             if (currentPlayerHp === 0) {
                 console.log(document);
                 gameOver();
@@ -245,11 +252,13 @@ function isEnemyHit(bullet) {
                 enemyHeight / 2
         ) {
             let currentEnemyHP = enemy.getAttribute("hp");
-            enemy.setAttribute("hp", --currentEnemyHP);
+            currentEnemyHP -= state.weaponPower;
+            enemy.setAttribute("hp", currentEnemyHP);
+            console.log(state.weaponPower);
             console.log(currentEnemyHP);
-            if (currentEnemyHP === 0) {
+            if (currentEnemyHP <= 0) {
                 increaseKillCount();
-                displayExplosion(enemy);
+                handleEnemyKill(enemy);
                 // enemy.remove();
             }
             return true;
@@ -259,17 +268,74 @@ function isEnemyHit(bullet) {
     return false;
 }
 
-function displayExplosion(enemy) {
+function handleEnemyKill(enemy) {
     enemy.src = "explosion.png";
+
     setTimeout(() => {
         enemy.classList.remove("enemy");
         enemy.classList.add("explosion");
     }, 0);
-    setTimeout(() => enemy.remove(), 1000);
+
+    let possibility = getRandomInteger(1, 100);
+
+    if (possibility <= 100) {
+        setTimeout(() => {
+            enemy.src = "lightning.png";
+            enemy.classList.remove("explosion");
+            enemy.classList.add("upgrade");
+        }, 500);
+        // setTimeout(() => enemy.remove(), 4000);
+    } else {
+        setTimeout(() => enemy.remove(), 1000);
+    }
+}
+
+function isWeaponUpgradePicked(upgrade) {
+    const ship = document.getElementById("ship");
+    const shipWidth = getWidth(ship);
+    const shipHeight = getHeight(ship);
+    const shipCoordinates = new Coordinates(
+        +ship.style.left.slice(0, -2),
+        +ship.style.top.slice(0, -2)
+    );
+
+    const upgradeCoordinates = new Coordinates(
+        +upgrade.style.left.slice(0, -2),
+        +upgrade.style.top.slice(0, -2)
+    );
+    if (
+        shipCoordinates.calculateHorizontalDistance(upgradeCoordinates) <
+            shipWidth / 2 &&
+        shipCoordinates.calculateVerticalDistance(upgradeCoordinates) <
+            shipHeight / 2
+    ) {
+        return true;
+    }
+    return false;
+}
+
+function handleUpgrades() {
+    const upgrades = document.getElementsByClassName("upgrade");
+    for (upgrade of upgrades) {
+        if (isWeaponUpgradePicked(upgrade)) {
+            increaseWeaponCount();
+            upgrade.remove();
+        }
+    }
 }
 
 function increaseKillCount() {
     document.getElementById("killCount").innerText++;
+}
+
+function increaseWeaponCount() {
+    state.weaponPower++;
+    document.getElementById("weaponPowerCount").innerText = state.weaponPower;
+}
+
+function resetWeaponPower() {
+    document.getElementById("weaponPowerCount").innerText = 1;
+    state.weaponPower = 1;
 }
 
 function resetKillCount() {

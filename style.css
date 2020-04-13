@@ -33,6 +33,14 @@ body {
     margin-right: 10px;
 }
 
+#weaponPower {
+    text-align: center;
+    position: fixed;
+    top: 0;
+    left: 200px;
+    color: yellow;
+}
+
 #startButton {
     width: 30vw;
     height: 20vh;
@@ -76,6 +84,17 @@ body {
     -webkit-animation: fadeout 1.5s;
     /* Safari, Chrome and Opera > 12.1 */
     -moz-animation: fadeout 1.5s;
+    /* Firefox < 16 */
+}
+
+.upgrade {
+    width: 75px;
+    height: 75px;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    /* -webkit-animation: fadeout 1.5s; */
+    /* Safari, Chrome and Opera > 12.1 */
+    /* -moz-animation: fadeout 1.5s; */
     /* Firefox < 16 */
 }
 
