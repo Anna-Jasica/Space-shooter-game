@@ -1,4 +1,4 @@
-const ENEMY_SPEED = 1;
+const ENEMY_SPEED = 3;
 const BULLET_SPEED = 10;
 const ENEMY_SPAWN_TIME = 3500;
 const ENEMY_DIRECTION_REPEAT = 40;
@@ -63,6 +63,7 @@ function startGame() {
     }
     resetCurrentHp();
     resetWeaponPower();
+    // upgrade.remove();
     // spawnEnemy();
     spawnIntervalId = setInterval(spawnEnemy, ENEMY_SPAWN_TIME);
     resetIntervalId = setInterval(changeInterval, 10000);
@@ -190,6 +191,9 @@ function gameOver() {
     }, 0);
     const bullets = document.getElementsByClassName("bullet");
     Array.from(bullets).forEach((enemy) => enemy.remove());
+    const upgrades = document.getElementsByClassName("upgrade");
+    console.log(upgrades);
+    Array.from(upgrades).forEach((upgrade) => upgrade.remove());
 }
 
 function isShipCollision(enemy) {
