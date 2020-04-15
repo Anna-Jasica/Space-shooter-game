@@ -1,10 +1,11 @@
-const ENEMY_SPEED = 3;
+const ENEMY_SPEED = 5;
 const BULLET_SPEED = 10;
-const ENEMY_SPAWN_TIME = 3500;
+const ENEMY_SPAWN_TIME = 1500;
 const ENEMY_DIRECTION_REPEAT = 40;
+const UPGRADE_SPAWN_CHANCE = 30;
 const ENEMY_HP = 3;
 const PLAYER_HP = 3;
-let currentPlayerHp;
+const UPGRADE_SPAWN_RATE = 3;
 let spawnIntervalId;
 let isGameRunning = false;
 let frameNumber = 0;
@@ -12,7 +13,8 @@ let intervalCycle = 0;
 let resetIntervalId;
 
 state = {
-    weaponPower: 1,
+    weaponPower: null,
+    currentPlayerHp: null,
 };
 
 const Direction = {
@@ -39,13 +41,12 @@ function init(event) {
 function fire(event) {
     const bullet = document.createElement("img");
     const ship = document.getElementById("ship");
-    bullet.src = "bullet.png";
+    bullet.src = "images/bullet.png";
     bullet.classList.add("bullet");
     document.getElementById("main").appendChild(bullet);
     bullet.style.top = `${event.y}px`;
     bullet.style.left = `${event.x + getWidth(ship) / 2}px`;
     bullet.setAttribute("draggable", false);
-    console.log("pew pew pew");
 }
 
 function shipTrack(e) {
@@ -63,8 +64,6 @@ function startGame() {
     }
     resetCurrentHp();
     resetWeaponPower();
-    // upgrade.remove();
-    // spawnEnemy();
     spawnIntervalId = setInterval(spawnEnemy, ENEMY_SPAWN_TIME);
     resetIntervalId = setInterval(changeInterval, 10000);
 }
@@ -88,7 +87,7 @@ function update() {
 function spawnEnemy() {
     const enemy = document.createElement("img");
     enemy.setAttribute("hp", ENEMY_HP);
-    enemy.src = "alien.png";
+    enemy.src = "images/alien.png";
     enemy.classList.add("enemy");
     document.getElementById("main").appendChild(enemy);
     enemy.style.top = `${getRandomInteger(
@@ -96,7 +95,6 @@ function spawnEnemy() {
         window.innerHeight - getHeight(enemy) / 2
     )}px`;
     enemy.style.left = `${window.innerWidth}px`;
-    console.log("am am am");
 }
 
 function move(element, direction) {
@@ -129,20 +127,16 @@ function handleEnemies() {
     for (enemy of enemies) {
         handleEnemyMove(enemy);
         if (Number(enemy.style.left.slice(0, -2)) < 0) {
-            // remove enemy from html (needed in case 1 not killed enemy doesn't lose game)
-            // stop game and display game over
             decreaseCurrentHp();
             enemy.remove();
-            if (currentPlayerHp === 0) {
+            if (state.currentPlayerHp === 0) {
                 gameOver();
             }
         }
         if (isShipCollision(enemy)) {
-            // stop game and display game over
             decreaseCurrentHp();
             handleEnemyKill(enemy);
-            if (currentPlayerHp === 0) {
-                console.log(document);
+            if (state.currentPlayerHp === 0) {
                 gameOver();
             }
         }
@@ -151,30 +145,29 @@ function handleEnemies() {
 }
 
 function handleEnemyMove(enemy) {
-    // if (frameNumber % 2 === 0) {
-    if (!enemy.getAttribute("direction")) {
-        move(enemy, Direction.LEFT);
-        enemy.setAttribute("direction", Direction.LEFT);
-    } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
-        const enemyYPosition = enemy.style.top.slice(0, -2);
-        let directions = [Direction.LEFT, Direction.TOP, Direction.DOWN];
-        if (enemyYPosition < window.innerHeight * 0.2) {
-            directions.splice(directions.indexOf(Direction.TOP), 1);
-        } else if (enemyYPosition > window.innerHeight * 0.2) {
-            directions.splice(directions.indexOf(Direction.DOWN), 1);
+    if (frameNumber % 2 === 0) {
+        if (!enemy.getAttribute("direction")) {
+            move(enemy, Direction.LEFT);
+            enemy.setAttribute("direction", Direction.LEFT);
+        } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
+            const enemyYPosition = enemy.style.top.slice(0, -2);
+            let directions = [Direction.LEFT, Direction.TOP, Direction.DOWN];
+            if (enemyYPosition < window.innerHeight * 0.2) {
+                directions.splice(directions.indexOf(Direction.TOP), 1);
+            } else if (enemyYPosition > window.innerHeight * 0.2) {
+                directions.splice(directions.indexOf(Direction.DOWN), 1);
+            }
+            const direction =
+                directions[getRandomInteger(0, directions.length - 1)];
+            move(enemy, direction);
+            enemy.setAttribute("direction", direction);
+        } else {
+            move(enemy, enemy.getAttribute("direction"));
         }
-        const direction =
-            directions[getRandomInteger(0, directions.length - 1)];
-        move(enemy, direction);
-        enemy.setAttribute("direction", direction);
-    } else {
-        move(enemy, enemy.getAttribute("direction"));
     }
-    // }
 }
 
 function gameOver() {
-    console.log("game over");
     const gameOver = document.getElementById("gameOver");
     window.removeEventListener("click", fire, true);
     document.getElementById("ship").style.display = "none";
@@ -184,15 +177,13 @@ function gameOver() {
     endButton.style.display = "block";
     gameOver.innerText = "Game Over!";
     document.getElementById("main").style.cursor = "auto";
-    //remove all enemies and bullets from game
-    setTimeout(() => {
-        const enemies = document.getElementsByClassName("enemy");
-        Array.from(enemies).forEach((enemy) => enemy.remove());
-    }, 0);
+    const enemies = document.getElementsByClassName("enemy");
+    Array.from(enemies).forEach((enemy) => enemy.remove());
     const bullets = document.getElementsByClassName("bullet");
     Array.from(bullets).forEach((enemy) => enemy.remove());
+    const explosion = document.getElementsByClassName("explosion");
+    Array.from(explosion).forEach((explosion) => explosion.remove());
     const upgrades = document.getElementsByClassName("upgrade");
-    console.log(upgrades);
     Array.from(upgrades).forEach((upgrade) => upgrade.remove());
 }
 
@@ -208,8 +199,8 @@ function isShipCollision(enemy) {
     const enemyWidth = getWidth(enemy);
     const enemyHeight = getHeight(enemy);
     const enemyCoordinates = new Coordinates(
-        +enemy.style.left.slice(0, -2), // give center position, not corner
-        +enemy.style.top.slice(0, -2) // give center position, not corner
+        +enemy.style.left.slice(0, -2),
+        +enemy.style.top.slice(0, -2)
     );
     if (
         shipCoordinates.calculateHorizontalDistance(enemyCoordinates) <
@@ -246,8 +237,8 @@ function isEnemyHit(bullet) {
         const enemyWidth = getWidth(enemy);
         const enemyHeight = getHeight(enemy);
         const enemyCoordinates = new Coordinates(
-            +enemy.style.left.slice(0, -2), // give center position, not corner
-            +enemy.style.top.slice(0, -2) // give center position, not corner
+            +enemy.style.left.slice(0, -2),
+            +enemy.style.top.slice(0, -2)
         );
         if (
             bulletCoordinates.calculateHorizontalDistance(enemyCoordinates) <
@@ -258,12 +249,9 @@ function isEnemyHit(bullet) {
             let currentEnemyHP = enemy.getAttribute("hp");
             currentEnemyHP -= state.weaponPower;
             enemy.setAttribute("hp", currentEnemyHP);
-            console.log(state.weaponPower);
-            console.log(currentEnemyHP);
             if (currentEnemyHP <= 0) {
                 increaseKillCount();
                 handleEnemyKill(enemy);
-                // enemy.remove();
             }
             return true;
         }
@@ -273,7 +261,7 @@ function isEnemyHit(bullet) {
 }
 
 function handleEnemyKill(enemy) {
-    enemy.src = "explosion.png";
+    enemy.src = "images/explosion.png";
 
     setTimeout(() => {
         enemy.classList.remove("enemy");
@@ -282,13 +270,12 @@ function handleEnemyKill(enemy) {
 
     let possibility = getRandomInteger(1, 100);
 
-    if (possibility <= 100) {
+    if (possibility <= UPGRADE_SPAWN_CHANCE) {
         setTimeout(() => {
-            enemy.src = "lightning.png";
+            enemy.src = "images/lightning.png";
             enemy.classList.remove("explosion");
             enemy.classList.add("upgrade");
         }, 500);
-        // setTimeout(() => enemy.remove(), 4000);
     } else {
         setTimeout(() => enemy.remove(), 1000);
     }
@@ -347,13 +334,13 @@ function resetKillCount() {
 }
 
 function decreaseCurrentHp() {
-    currentPlayerHp--;
-    displayHp(currentPlayerHp);
+    state.currentPlayerHp--;
+    displayHp(state.currentPlayerHp);
 }
 
 function resetCurrentHp() {
-    currentPlayerHp = PLAYER_HP;
-    displayHp(currentPlayerHp);
+    state.currentPlayerHp = PLAYER_HP;
+    displayHp(state.currentPlayerHp);
 }
 
 function isBulletWithinScreen(bullet) {
@@ -381,11 +368,9 @@ function displayHp(value) {
     for (let i = 0; i < value; i++) {
         const ship = document.createElement("img");
         ship.classList.add("hpUnit");
-        ship.src = "newship.png";
+        ship.src = "images/ship.png";
         currentHpDiv.appendChild(ship);
-        // ship.src =
     }
-    // currentHpDiv.innerHTML =
 }
 // function isCollide(a, b) {
 //     return !(

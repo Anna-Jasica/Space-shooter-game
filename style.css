@@ -1,5 +1,5 @@
 body {
-    background: url(background.jpg);
+    background: url("images/background.jpg");
     color: white;
     overflow: hidden;
 
@@ -88,8 +88,8 @@ body {
 }
 
 .upgrade {
-    width: 75px;
-    height: 75px;
+    width: 30px;
+    height: 30px;
     position: fixed;
     transform: translate(-50%, -50%);
     /* -webkit-animation: fadeout 1.5s; */
