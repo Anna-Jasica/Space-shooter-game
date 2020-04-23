@@ -1,3 +1,7 @@
+import "../style.scss";
+import _ from "lodash";
+import { getHeight, getWidth } from "./utils.js";
+
 const ENEMY_SPEED = 5;
 const BULLET_SPEED = 10;
 const ENEMY_SPAWN_TIME = 1500;
@@ -12,11 +16,10 @@ let frameNumber = 0;
 let intervalCycle = 0;
 let resetIntervalId;
 
-state = {
+const state = {
     weaponPower: null,
     currentPlayerHp: null,
 };
-
 const Direction = {
     LEFT: "left",
     RIGHT: "right",
@@ -24,7 +27,7 @@ const Direction = {
     TOP: "top",
 };
 
-function init(event) {
+window.init = function (event) {
     resetKillCount();
     shipTrack(event);
     document.getElementById("startButton").style.display = "none";
@@ -36,12 +39,11 @@ function init(event) {
     window.addEventListener("click", fire, true);
     window.addEventListener("mousemove", shipTrack);
     startGame();
-}
+};
 
 function fire(event) {
-    const bullet = document.createElement("img");
+    const bullet = document.createElement("div");
     const ship = document.getElementById("ship");
-    bullet.src = "images/bullet.png";
     bullet.classList.add("bullet");
     document.getElementById("main").appendChild(bullet);
     bullet.style.top = `${event.y}px`;
@@ -85,9 +87,8 @@ function update() {
 }
 
 function spawnEnemy() {
-    const enemy = document.createElement("img");
+    const enemy = document.createElement("div");
     enemy.setAttribute("hp", ENEMY_HP);
-    enemy.src = "images/alien.png";
     enemy.classList.add("enemy");
     document.getElementById("main").appendChild(enemy);
     enemy.style.top = `${getRandomInteger(
@@ -123,8 +124,8 @@ function move(element, direction) {
 }
 
 function handleEnemies() {
-    const enemies = document.getElementsByClassName("enemy");
-    for (enemy of enemies) {
+    const enemies = Array.from(document.getElementsByClassName("enemy"));
+    for (const enemy of enemies) {
         handleEnemyMove(enemy);
         if (Number(enemy.style.left.slice(0, -2)) < 0) {
             decreaseCurrentHp();
@@ -181,10 +182,10 @@ function gameOver() {
     Array.from(enemies).forEach((enemy) => enemy.remove());
     const bullets = document.getElementsByClassName("bullet");
     Array.from(bullets).forEach((enemy) => enemy.remove());
-    const explosion = document.getElementsByClassName("explosion");
-    Array.from(explosion).forEach((explosion) => explosion.remove());
-    const upgrades = document.getElementsByClassName("upgrade");
-    Array.from(upgrades).forEach((upgrade) => upgrade.remove());
+    setTimeout(() => {
+        const upgrades = document.getElementsByClassName("upgrade");
+        Array.from(upgrades).forEach((upgrade) => upgrade.remove());
+    }, 500);
 }
 
 function isShipCollision(enemy) {
@@ -215,7 +216,7 @@ function isShipCollision(enemy) {
 
 function handleBullets() {
     const bullets = document.getElementsByClassName("bullet");
-    for (bullet of bullets) {
+    for (const bullet of bullets) {
         move(bullet, Direction.RIGHT);
 
         if (isEnemyHit(bullet)) {
@@ -233,7 +234,7 @@ function isEnemyHit(bullet) {
         +bullet.style.top.slice(0, -2)
     );
     const enemies = document.getElementsByClassName("enemy");
-    for (enemy of enemies) {
+    for (const enemy of enemies) {
         const enemyWidth = getWidth(enemy);
         const enemyHeight = getHeight(enemy);
         const enemyCoordinates = new Coordinates(
@@ -261,18 +262,13 @@ function isEnemyHit(bullet) {
 }
 
 function handleEnemyKill(enemy) {
-    enemy.src = "images/explosion.png";
-
-    setTimeout(() => {
-        enemy.classList.remove("enemy");
-        enemy.classList.add("explosion");
-    }, 0);
+    enemy.classList.remove("enemy");
+    enemy.classList.add("explosion");
 
     let possibility = getRandomInteger(1, 100);
 
     if (possibility <= UPGRADE_SPAWN_CHANCE) {
         setTimeout(() => {
-            enemy.src = "images/lightning.png";
             enemy.classList.remove("explosion");
             enemy.classList.add("upgrade");
         }, 500);
@@ -307,7 +303,7 @@ function isWeaponUpgradePicked(upgrade) {
 
 function handleUpgrades() {
     const upgrades = document.getElementsByClassName("upgrade");
-    for (upgrade of upgrades) {
+    for (const upgrade of upgrades) {
         if (isWeaponUpgradePicked(upgrade)) {
             increaseWeaponCount();
             upgrade.remove();
@@ -354,21 +350,12 @@ function getRandomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function getHeight(element) {
-    return Number(getComputedStyle(element).height.slice(0, -2));
-}
-
-function getWidth(element) {
-    return Number(getComputedStyle(element).width.slice(0, -2));
-}
-
 function displayHp(value) {
     const currentHpDiv = document.getElementById("currentHp");
     currentHpDiv.innerHTML = "";
     for (let i = 0; i < value; i++) {
-        const ship = document.createElement("img");
+        const ship = document.createElement("div");
         ship.classList.add("hpUnit");
-        ship.src = "images/ship.png";
         currentHpDiv.appendChild(ship);
     }
 }
