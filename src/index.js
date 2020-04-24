@@ -1,5 +1,4 @@
 import "../style.scss";
-import _ from "lodash";
 import { getHeight, getWidth } from "./utils.js";
 
 const ENEMY_SPEED = 5;
@@ -34,7 +33,6 @@ window.init = function (event) {
     document.getElementById("endButton").style.display = "none";
     document.getElementById("gameOver").style.display = "none";
     document.getElementById("ship").style.display = "block";
-    document.getElementById("ship").setAttribute("draggable", false);
     document.getElementById("main").style.cursor = "none";
     window.addEventListener("click", fire, true);
     window.addEventListener("mousemove", shipTrack);
@@ -45,10 +43,10 @@ function fire(event) {
     const bullet = document.createElement("div");
     const ship = document.getElementById("ship");
     bullet.classList.add("bullet");
+    bullet.classList.add("undraggable");
     document.getElementById("main").appendChild(bullet);
     bullet.style.top = `${event.y}px`;
     bullet.style.left = `${event.x + getWidth(ship) / 2}px`;
-    bullet.setAttribute("draggable", false);
 }
 
 function shipTrack(e) {
