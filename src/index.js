@@ -1,4 +1,5 @@
 import "../style.scss";
+import "../index.html";
 import _ from "lodash";
 import { getHeight, getWidth } from "./utils.js";
 
