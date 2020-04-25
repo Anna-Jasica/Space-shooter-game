@@ -1,4 +1,4 @@
-import { Direction } from "./directionEnum";
+import { Direction } from "../enums";
 
 export function getHeight(element) {
     return Number(getComputedStyle(element).height.slice(0, -2));
@@ -6,6 +6,23 @@ export function getHeight(element) {
 
 export function getWidth(element) {
     return Number(getComputedStyle(element).width.slice(0, -2));
+}
+
+export function isCollision(element1, element2) {
+    const element1Height = getHeight(element1);
+    const element1Width = getWidth(element1);
+    const element2Height = getHeight(element2);
+    const element2Width = getWidth(element2);
+    const element1X = +element1.style.left.slice(0, -2);
+    const element1Y = +element1.style.top.slice(0, -2);
+    const element2X = +element2.style.left.slice(0, -2);
+    const element2Y = +element2.style.top.slice(0, -2);
+    return !(
+        Math.abs(element1X - element2X) >
+            (element1Width / 2 + element2Width / 2) / 2 ||
+        Math.abs(element1Y - element2Y) >
+            (element1Height / 2 + element2Height / 2) / 2
+    );
 }
 
 export function increaseKillCount() {
