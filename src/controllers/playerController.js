@@ -1,6 +1,6 @@
 import { getWidth } from "../utils";
 
-export default class playerController {
+export default class PlayerController {
     constructor() {
         this.currentHp = 0;
         this.weaponPower = 0;
