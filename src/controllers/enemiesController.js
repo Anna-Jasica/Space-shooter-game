@@ -27,7 +27,6 @@ export default class EnemiesController {
             window.innerHeight - getHeight(enemy) / 2
         )}px`;
         enemy.style.left = `${window.innerWidth}px`;
-        console.log(enemy.children);
     }
 
     createHpBar() {
@@ -85,8 +84,6 @@ export default class EnemiesController {
                     enemy.firstElementChild.style.width = `${
                         (currentEnemyHP / maxEnemyHP) * 100
                     }%`.toString();
-                    console.log(currentEnemyHP / maxEnemyHP);
-                    console.log(enemy.firstElementChild.style.width);
                 }
 
                 // switch (currentEnemyHP) {
