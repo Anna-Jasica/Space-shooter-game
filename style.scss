@@ -92,7 +92,6 @@ body {
     height: 10px;
     -webkit-transition: width 0.2s ease;
     transition: width 0.2s ease;
-
 }
 
 .explosion {
@@ -115,6 +114,9 @@ body {
     transform: translate(-50%, -50%);
     background: url("./images/lightning.png");
     background-size: 100% 100%;
+    -webkit-animation: fadeout 6s;
+    /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeout 6s;
 }
 
 @keyframes fadeout {
@@ -176,6 +178,6 @@ body {
     border: solid yellow;
     color: yellow;
     display: none;
-    text-align: center;
-    padding-top: 7vh;
+    align-items: center;
+    justify-content: center;
 }

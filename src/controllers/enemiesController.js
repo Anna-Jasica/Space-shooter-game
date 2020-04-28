@@ -1,10 +1,4 @@
-import {
-    move,
-    getHeight,
-    getRandomInteger,
-    increaseKillCount,
-    isCollision,
-} from "../utils";
+import { move, getHeight, getRandomInteger } from "../utils";
 import { Direction } from "../enums";
 import {
     ENEMY_HP,
@@ -14,6 +8,11 @@ import {
 } from "../constants";
 
 export default class EnemiesController {
+    constructor() {
+        this.enemies = [];
+        this.enemyId = 0;
+    }
+
     spawnEnemy() {
         const enemy = document.createElement("div");
         enemy.classList.add("enemy", "progress");
@@ -27,6 +26,10 @@ export default class EnemiesController {
             window.innerHeight - getHeight(enemy) / 2
         )}px`;
         enemy.style.left = `${window.innerWidth}px`;
+
+        enemy.id = this.enemyId++;
+        this.enemies.push(enemy);
+        document.getElementById("main").appendChild(enemy);
     }
 
     createHpBar() {
@@ -46,7 +49,7 @@ export default class EnemiesController {
                 move(enemy, Direction.LEFT, ENEMY_SPEED);
                 enemy.setAttribute("direction", Direction.LEFT);
             } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
-                const enemyYPosition = enemy.style.top.slice(0, -2);
+                const enemyYPosition = enemy.offsetTop;
                 let directions = [
                     Direction.LEFT,
                     Direction.TOP,
@@ -67,54 +70,42 @@ export default class EnemiesController {
         }
     }
 
-    isAnyEnemyHit(bullet, weaponPower) {
-        const enemies = document.getElementsByClassName("enemy");
-        for (const enemy of enemies) {
-            if (isCollision(enemy, bullet)) {
-                let maxEnemyHP = enemy.getAttribute("max-hp");
-                let currentEnemyHP = enemy.getAttribute("hp");
-                currentEnemyHP -= weaponPower;
-                enemy.setAttribute("hp", currentEnemyHP);
+    isEnemyKilled(enemy, weaponPower) {
+        const maxEnemyHP = enemy.getAttribute("max-hp");
+        const currentEnemyHP = enemy.getAttribute("hp") - weaponPower;
+        enemy.setAttribute("hp", currentEnemyHP);
 
-                if (currentEnemyHP !== maxEnemyHP) {
-                    enemy.firstElementChild.setAttribute(
-                        "aria-valuenow",
-                        String(currentEnemyHP / maxEnemyHP)
-                    );
-                    enemy.firstElementChild.style.width = `${
-                        (currentEnemyHP / maxEnemyHP) * 100
-                    }%`.toString();
-                }
-
-                // switch (currentEnemyHP) {
-                //     case 2:
-                //         enemy.firstElementChild["aria-valuenow"] === "75";
-                //         enemy.firstElementChild.style === "width: 75%";
-                //         break;
-                // }
-                if (currentEnemyHP <= 0) {
-                    increaseKillCount();
-                    this.handleEnemyKill(enemy);
-                }
-                return true;
-            }
+        if (currentEnemyHP <= 0) {
+            this.handleEnemyKill(enemy);
+            return true;
         }
 
+        enemy.firstElementChild.setAttribute(
+            "aria-valuenow",
+            String(currentEnemyHP / maxEnemyHP)
+        );
+        enemy.firstElementChild.style.width = `${
+            (currentEnemyHP / maxEnemyHP) * 100
+        }%`;
         return false;
     }
 
     handleEnemyKill(enemy) {
         enemy.firstElementChild.remove();
 
+        this.enemies.splice(
+            this.enemies.findIndex((obj) => obj.id === enemy.id),
+            1
+        );
         enemy.classList.remove("enemy");
         enemy.classList.add("explosion");
 
-        let possibility = getRandomInteger(1, 100);
-
+        const possibility = getRandomInteger(1, 100);
         if (possibility <= UPGRADE_SPAWN_CHANCE) {
             setTimeout(() => {
                 enemy.classList.remove("explosion");
                 enemy.classList.add("upgrade");
+                setTimeout(() => enemy.remove(), 5000);
             }, 500);
         } else {
             setTimeout(() => enemy.remove(), 1000);

@@ -1,46 +1,32 @@
 import { Direction } from "../enums";
 
 export function getHeight(element) {
-    return Number(getComputedStyle(element).height.slice(0, -2));
+    return element.offsetHeight;
 }
 
 export function getWidth(element) {
-    return Number(getComputedStyle(element).width.slice(0, -2));
+    return element.offsetWidth;
 }
 
 export function isCollision(element1, element2) {
-    const element1Height = getHeight(element1);
-    const element1Width = getWidth(element1);
-    const element2Height = getHeight(element2);
-    const element2Width = getWidth(element2);
-    const element1X = +element1.style.left.slice(0, -2);
-    const element1Y = +element1.style.top.slice(0, -2);
-    const element2X = +element2.style.left.slice(0, -2);
-    const element2Y = +element2.style.top.slice(0, -2);
     return !(
-        Math.abs(element1X - element2X) >
-            (element1Width / 2 + element2Width / 2) / 2 ||
-        Math.abs(element1Y - element2Y) >
-            (element1Height / 2 + element2Height / 2) / 2
+        Math.abs(element1.offsetLeft - element2.offsetLeft) >
+            (element1.offsetWidth / 2 + element2.offsetWidth / 2) / 2 ||
+        Math.abs(element1.offsetTop - element2.offsetTop) >
+            (element1.offsetHeight / 2 + element2.offsetHeight / 2) / 2
     );
 }
 
-export function increaseKillCount() {
-    document.getElementById("killCount").innerText++;
-}
-
-export function resetKillCount() {
-    document.getElementById("killCount").innerText = 0;
+export function displayKillCount(value) {
+    document.getElementById("killCount").innerText = value;
 }
 
 export function isElementWithinScreen(element) {
-    const xPosition = +element.style.left.slice(0, -2);
-    const yPosition = +element.style.top.slice(0, -2);
     if (
-        xPosition > window.innerWidth ||
-        xPosition < 0 ||
-        yPosition > window.innerHeight ||
-        yPosition < 0
+        element.offsetLeft > window.innerWidth ||
+        element.offsetLeft < 0 ||
+        element.offsetTop > window.innerHeight ||
+        element.offsetTop < 0
     ) {
         return false;
     }
@@ -57,27 +43,23 @@ export function displayHp(value) {
     }
 }
 
+export function displayWeaponPower(value) {
+    document.getElementById("weaponPowerCount").innerText = value;
+}
+
 export function move(element, direction, distance) {
     switch (direction) {
         case Direction.LEFT:
-            element.style.left = `${
-                +element.style.left.slice(0, -2) - distance
-            }px`;
+            element.style.left = `${element.offsetLeft - distance}px`;
             break;
         case Direction.RIGHT:
-            element.style.left = `${
-                +element.style.left.slice(0, -2) + distance
-            }px`;
+            element.style.left = `${element.offsetLeft + distance}px`;
             break;
         case Direction.TOP:
-            element.style.top = `${
-                +element.style.top.slice(0, -2) - distance
-            }px`;
+            element.style.top = `${element.offsetTop - distance}px`;
             break;
         case Direction.DOWN:
-            element.style.top = `${
-                +element.style.top.slice(0, -2) + distance
-            }px`;
+            element.style.top = `${element.offsetTop + distance}px`;
             break;
     }
 }

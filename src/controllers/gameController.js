@@ -1,19 +1,13 @@
-import {
-    displayHp,
-    move,
-    isElementWithinScreen,
-    resetKillCount,
-    isCollision,
-} from "../utils";
+import { move, isElementWithinScreen, isCollision } from "../utils";
 import EnemiesController from "./enemiesController";
 import PlayerController from "./playerController";
 import { Direction } from "../enums";
-import { ENEMY_SPAWN_TIME, PLAYER_HP, BULLET_SPEED } from "../constants";
+import { ENEMY_SPAWN_TIME, PHASE_DURATION } from "../constants";
 
 export default class GameController {
     constructor() {
-        this.enemiesController = new EnemiesController();
-        this.playerController = new PlayerController();
+        this.enemiesController = null;
+        this.playerController = null;
         this.isGameRunning = false;
         this.frameNumber = 0;
         this.spawnPhase = 0;
@@ -21,42 +15,56 @@ export default class GameController {
         this.changePhaseIntervalId = null;
     }
 
-    startGame() {
-        this.prepareGame();
-        this.resetCurrentHp();
-        this.resetWeaponPower();
-        resetKillCount();
+    initState() {
+        this.playerController = new PlayerController();
+        this.enemiesController = new EnemiesController();
+        this.frameNumber = 0;
+        this.spawnPhase = 0;
+    }
+
+    startGame(click) {
+        this.initState();
+        this.playerController.shipTrack(click);
+        this.hideMenu();
+        this.addEventListeners();
 
         if (!this.isGameRunning) {
             this.update();
             this.isGameRunning = true;
         }
+        // this.enemiesController.spawnEnemy();
+        this.startSpawningEnemies();
+    }
+
+    startSpawningEnemies() {
         this.spawnIntervalId = setInterval(
             () => this.enemiesController.spawnEnemy(),
             ENEMY_SPAWN_TIME
         );
         this.changePhaseIntervalId = setInterval(
             () => this.decreaseEnemySpawnTime(),
-            10000
+            PHASE_DURATION
         );
     }
 
-    prepareGame() {
+    hideMenu() {
         document.getElementById("startButton").style.display = "none";
         document.getElementById("endButton").style.display = "none";
         document.getElementById("gameOver").style.display = "none";
-        document.getElementById("ship").style.display = "block";
         document.getElementById("main").style.cursor = "none";
-        window.addEventListener("click", this.playerController.fire, true);
-        window.addEventListener("mousemove", this.shipTrack);
     }
 
-    shipTrack(e) {
-        let positionX = e.clientX;
-        let positionY = e.clientY;
-        const ship = document.getElementById("ship");
-        ship.style.top = `${positionY}px`;
-        ship.style.left = `${positionX}px`;
+    addEventListeners() {
+        window.addEventListener("click", this.playerController.fire, true);
+        window.addEventListener("mousemove", this.playerController.shipTrack);
+    }
+
+    removeEventListeners() {
+        window.removeEventListener("click", this.playerController.fire, true);
+        window.removeEventListener(
+            "mousemove",
+            this.playerController.shipTrack
+        );
     }
 
     update() {
@@ -76,16 +84,14 @@ export default class GameController {
     }
 
     handleEnemies() {
-        const ship = document.getElementById("ship");
-        const enemies = Array.from(document.getElementsByClassName("enemy"));
-        for (const enemy of enemies) {
+        for (const enemy of this.enemiesController.enemies) {
             this.enemiesController.handleEnemyMove(enemy, this.frameNumber);
-            if (+enemy.style.left.slice(0, -2) < 0) {
-                this.decreaseCurrentHp();
+            if (enemy.offsetLeft < 0) {
+                this.playerController.decreaseCurrentHp();
                 enemy.remove();
             }
-            if (isCollision(ship, enemy)) {
-                this.decreaseCurrentHp();
+            if (isCollision(this.playerController.ship, enemy)) {
+                this.playerController.decreaseCurrentHp();
                 this.enemiesController.handleEnemyKill(enemy);
             }
             if (this.playerController.currentHp === 0) {
@@ -99,15 +105,20 @@ export default class GameController {
     handleBullets() {
         const bullets = document.getElementsByClassName("bullet");
         for (const bullet of bullets) {
-            move(bullet, Direction.RIGHT, BULLET_SPEED);
+            move(bullet, Direction.RIGHT, this.playerController.weapon.speed);
 
-            if (
-                this.enemiesController.isAnyEnemyHit(
-                    bullet,
-                    this.playerController.weaponPower
-                )
-            ) {
-                bullet.remove();
+            for (const enemy of this.enemiesController.enemies) {
+                if (isCollision(enemy, bullet)) {
+                    bullet.remove();
+                    if (
+                        this.enemiesController.isEnemyKilled(
+                            enemy,
+                            this.playerController.weapon.power
+                        )
+                    ) {
+                        this.playerController.increaseKillCount();
+                    }
+                }
             }
             if (!isElementWithinScreen(bullet)) {
                 bullet.remove();
@@ -116,57 +127,43 @@ export default class GameController {
     }
 
     handleUpgrades() {
-        const ship = document.getElementById("ship");
         const upgrades = document.getElementsByClassName("upgrade");
         for (const upgrade of upgrades) {
-            if (isCollision(upgrade, ship)) {
-                this.increaseWeaponCount();
+            if (isCollision(upgrade, this.playerController.ship)) {
+                this.playerController.increaseWeaponCount();
                 upgrade.remove();
             }
         }
     }
 
     gameOver() {
-        document.getElementById("gameOver").style.display = "block";
-        window.removeEventListener("click", this.playerController.fire, true);
-        document.getElementById("ship").style.display = "none";
-        document.getElementById("endButton").style.display = "block";
-        document.getElementById("main").style.cursor = "auto";
+        this.playerController.hideShip();
+        this.removeEventListeners();
+        this.stopSpawningEnemies();
+        this.removeAllElementsFromHtml();
+        this.displayMenu();
+    }
+
+    stopSpawningEnemies() {
         clearInterval(this.spawnIntervalId);
         clearInterval(this.changePhaseIntervalId);
-        this.removeAllElementsFromHtml();
+    }
+
+    displayMenu() {
+        document.getElementById("gameOver").style.display = "flex";
+        document.getElementById("endButton").style.display = "block";
+        document.getElementById("main").style.cursor = "auto";
     }
 
     removeAllElementsFromHtml() {
-        const enemies = document.getElementsByClassName("enemy");
-        Array.from(enemies).forEach((enemy) => enemy.remove());
+        Array.from(this.enemiesController.enemies).forEach((enemy) =>
+            enemy.remove()
+        );
         const bullets = document.getElementsByClassName("bullet");
         Array.from(bullets).forEach((enemy) => enemy.remove());
         setTimeout(() => {
             const upgrades = document.getElementsByClassName("upgrade");
             Array.from(upgrades).forEach((upgrade) => upgrade.remove());
         }, 500);
-    }
-
-    resetWeaponPower() {
-        this.playerController.weaponPower = 1;
-        document.getElementById("weaponPowerCount").innerText = 1;
-    }
-
-    increaseWeaponCount() {
-        this.playerController.weaponPower++;
-        document.getElementById(
-            "weaponPowerCount"
-        ).innerText = this.playerController.weaponPower;
-    }
-
-    resetCurrentHp() {
-        this.playerController.currentHp = PLAYER_HP;
-        displayHp(PLAYER_HP);
-    }
-
-    decreaseCurrentHp() {
-        this.playerController.currentHp--;
-        displayHp(this.playerController.currentHp);
     }
 }
