@@ -16,14 +16,29 @@ import {
 export default class EnemiesController {
     spawnEnemy() {
         const enemy = document.createElement("div");
+        enemy.classList.add("enemy", "progress");
         enemy.setAttribute("hp", ENEMY_HP);
-        enemy.classList.add("enemy");
+        enemy.setAttribute("max-hp", ENEMY_HP);
+
+        enemy.appendChild(this.createHpBar());
         document.getElementById("main").appendChild(enemy);
         enemy.style.top = `${getRandomInteger(
             getHeight(enemy) / 2,
             window.innerHeight - getHeight(enemy) / 2
         )}px`;
         enemy.style.left = `${window.innerWidth}px`;
+        console.log(enemy.children);
+    }
+
+    createHpBar() {
+        const enemyHpBar = document.createElement("div");
+        enemyHpBar.setAttribute("role", "progressbar");
+        enemyHpBar.setAttribute("aria-valuenow", "100");
+        enemyHpBar.setAttribute("aria-valuemin", "0");
+        enemyHpBar.setAttribute("aria-valuemax", "100");
+        enemyHpBar.setAttribute("style", "width: 100%;");
+        enemyHpBar.classList.add("progress-bar", "progress-bar-success");
+        return enemyHpBar;
     }
 
     handleEnemyMove(enemy, frameNumber) {
@@ -57,9 +72,29 @@ export default class EnemiesController {
         const enemies = document.getElementsByClassName("enemy");
         for (const enemy of enemies) {
             if (isCollision(enemy, bullet)) {
+                let maxEnemyHP = enemy.getAttribute("max-hp");
                 let currentEnemyHP = enemy.getAttribute("hp");
                 currentEnemyHP -= weaponPower;
                 enemy.setAttribute("hp", currentEnemyHP);
+
+                if (currentEnemyHP !== maxEnemyHP) {
+                    enemy.firstElementChild.setAttribute(
+                        "aria-valuenow",
+                        String(currentEnemyHP / maxEnemyHP)
+                    );
+                    enemy.firstElementChild.style.width = `${
+                        (currentEnemyHP / maxEnemyHP) * 100
+                    }%`.toString();
+                    console.log(currentEnemyHP / maxEnemyHP);
+                    console.log(enemy.firstElementChild.style.width);
+                }
+
+                // switch (currentEnemyHP) {
+                //     case 2:
+                //         enemy.firstElementChild["aria-valuenow"] === "75";
+                //         enemy.firstElementChild.style === "width: 75%";
+                //         break;
+                // }
                 if (currentEnemyHP <= 0) {
                     increaseKillCount();
                     this.handleEnemyKill(enemy);
@@ -72,6 +107,8 @@ export default class EnemiesController {
     }
 
     handleEnemyKill(enemy) {
+        enemy.firstElementChild.remove();
+
         enemy.classList.remove("enemy");
         enemy.classList.add("explosion");
 

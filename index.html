@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Space shooter</title>
-        <meta name="description" content="Play Space-shooter Game!" />
-        <meta name="keywords" content="play, game, space, aliens" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <link rel="stylesheet" href="style.css" />
-    </head>
 
-    <body>
-        <div id="main">
-            <div id="scoreboard">
-                Shot enemies:
-                <p id="killCount">0</p>
-            </div>
-            <div id="currentHp"></div>
-            <div id="weaponPower">
-                Weapon's power:
-                <p id="weaponPowerCount">1</p>
-            </div>
-            <div id="ship" class="undraggable"></div>
-            <button onclick="init(event)" id="startButton">Let's fly!</button>
-            <div id="gameOver">GAME OVER!</div>
-            <button onclick="init(event)" id="endButton">Fly again!</button>
+<head>
+    <meta charset="UTF-8" />
+    <title>Space shooter</title>
+    <meta name="description" content="Play Space-shooter Game!" />
+    <meta name="keywords" content="play, game, space, aliens" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div id="main">
+        <div id="scoreboard">
+            Shot enemies:
+            <p id="killCount">0</p>
         </div>
-    </body>
-    <script src="./main.js"></script>
+        <div id="currentHp"></div>
+        <div id="weaponPower">
+            Weapon's power:
+            <p id="weaponPowerCount">1</p>
+        </div>
+        <div id="ship" class="undraggable"></div>
+        <button onclick="init(event)" id="startButton">Let's fly!</button>
+        <div id="gameOver">GAME OVER!</div>
+        <button onclick="init(event)" id="endButton">Fly again!</button>
+    </div>
+</body>
+<script src="./main.js"></script>
+
 </html>
