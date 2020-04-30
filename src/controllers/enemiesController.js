@@ -44,30 +44,26 @@ export default class EnemiesController {
     }
 
     handleEnemyMove(enemy, frameNumber) {
-        if (frameNumber % 2 === 0) {
-            if (!enemy.getAttribute("direction")) {
-                move(enemy, Direction.LEFT, ENEMY_SPEED);
-                enemy.setAttribute("direction", Direction.LEFT);
-            } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
-                const enemyYPosition = enemy.offsetTop;
-                let directions = [
-                    Direction.LEFT,
-                    Direction.TOP,
-                    Direction.DOWN,
-                ];
-                if (enemyYPosition < window.innerHeight * 0.2) {
-                    directions.splice(directions.indexOf(Direction.TOP), 1);
-                } else if (enemyYPosition > window.innerHeight * 0.2) {
-                    directions.splice(directions.indexOf(Direction.DOWN), 1);
-                }
-                const direction =
-                    directions[getRandomInteger(0, directions.length - 1)];
-                move(enemy, direction, ENEMY_SPEED);
-                enemy.setAttribute("direction", direction);
-            } else {
-                move(enemy, enemy.getAttribute("direction"), ENEMY_SPEED);
+        // if (frameNumber % 2 === 0) {
+        if (!enemy.getAttribute("direction")) {
+            move(enemy, Direction.LEFT, ENEMY_SPEED);
+            enemy.setAttribute("direction", Direction.LEFT);
+        } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
+            const enemyYPosition = enemy.offsetTop;
+            let directions = [Direction.LEFT, Direction.TOP, Direction.DOWN];
+            if (enemyYPosition < window.innerHeight * 0.2) {
+                directions.splice(directions.indexOf(Direction.TOP), 1);
+            } else if (enemyYPosition > window.innerHeight * 0.2) {
+                directions.splice(directions.indexOf(Direction.DOWN), 1);
             }
+            const direction =
+                directions[getRandomInteger(0, directions.length - 1)];
+            move(enemy, direction, ENEMY_SPEED);
+            enemy.setAttribute("direction", direction);
+        } else {
+            move(enemy, enemy.getAttribute("direction"), ENEMY_SPEED);
         }
+        // }
     }
 
     isEnemyKilled(enemy, weaponPower) {

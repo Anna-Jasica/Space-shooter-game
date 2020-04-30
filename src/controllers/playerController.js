@@ -1,16 +1,17 @@
 import {
     getWidth,
-    displayHp,
-    displayWeaponPower,
-    displayKillCount,
+    updateHp,
+    updateWeaponPower,
+    updateKillCount,
 } from "../utils";
-import { PLAYER_HP, BULLET_SPEED } from "../constants";
+import { PLAYER_HP, BULLET_SPEED, UPGRADE_POWER } from "../constants";
 
 export default class PlayerController {
     constructor() {
         this.ship = document.getElementById("ship");
         this.currentHp = PLAYER_HP;
         this.weapon = {
+            level: 1,
             power: 1,
             speed: BULLET_SPEED,
         };
@@ -19,9 +20,9 @@ export default class PlayerController {
         };
 
         this.displayShip();
-        displayHp(this.currentHp);
-        displayWeaponPower(this.weapon.power);
-        displayKillCount(this.stats.shotEnemies);
+        updateHp(this.currentHp);
+        updateWeaponPower(this.weapon.power);
+        updateKillCount(this.stats.shotEnemies);
     }
 
     shipTrack(event) {
@@ -47,18 +48,20 @@ export default class PlayerController {
         this.ship.style.display = "none";
     }
 
-    increaseWeaponCount() {
-        this.weapon.power++;
-        displayWeaponPower(this.weapon.power);
+    increaseWeaponLevel() {
+        this.weapon.level++;
+        this.weapon.power += UPGRADE_POWER;
+        this.weapon.speed++;
+        updateWeaponPower(this.weapon.level);
     }
 
     increaseKillCount() {
         this.stats.shotEnemies++;
-        displayKillCount(this.stats.shotEnemies);
+        updateKillCount(this.stats.shotEnemies);
     }
 
     decreaseCurrentHp() {
         this.currentHp--;
-        displayHp(this.currentHp);
+        updateHp(this.currentHp);
     }
 }

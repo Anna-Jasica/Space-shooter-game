@@ -1,4 +1,9 @@
-import { move, isElementWithinScreen, isCollision } from "../utils";
+import {
+    move,
+    isElementWithinScreen,
+    isCollision,
+    updateCurrentPhase,
+} from "../utils";
 import EnemiesController from "./enemiesController";
 import PlayerController from "./playerController";
 import { Direction } from "../enums";
@@ -10,7 +15,7 @@ export default class GameController {
         this.playerController = null;
         this.isGameRunning = false;
         this.frameNumber = 0;
-        this.spawnPhase = 0;
+        this.currentPhase = 1;
         this.spawnIntervalId = null;
         this.changePhaseIntervalId = null;
     }
@@ -19,7 +24,8 @@ export default class GameController {
         this.playerController = new PlayerController();
         this.enemiesController = new EnemiesController();
         this.frameNumber = 0;
-        this.spawnPhase = 0;
+        this.currentPhase = 1;
+        updateCurrentPhase(this.currentPhase);
     }
 
     startGame(click) {
@@ -41,16 +47,17 @@ export default class GameController {
             () => this.enemiesController.spawnEnemy(),
             ENEMY_SPAWN_TIME
         );
-        this.changePhaseIntervalId = setInterval(
-            () => this.decreaseEnemySpawnTime(),
-            PHASE_DURATION
-        );
+        this.changePhaseIntervalId = setInterval(() => {
+            this.currentPhase++;
+            updateCurrentPhase(this.currentPhase);
+            this.decreaseEnemySpawnTime();
+        }, PHASE_DURATION);
     }
 
     hideMenu() {
-        document.getElementById("startButton").style.display = "none";
-        document.getElementById("endButton").style.display = "none";
-        document.getElementById("gameOver").style.display = "none";
+        document.getElementById("start-button").style.display = "none";
+        document.getElementById("end-button").style.display = "none";
+        document.getElementById("game-over").style.display = "none";
         document.getElementById("main").style.cursor = "none";
     }
 
@@ -76,10 +83,9 @@ export default class GameController {
 
     decreaseEnemySpawnTime() {
         clearInterval(this.spawnIntervalId);
-        this.spawnPhase++;
         this.spawnIntervalId = setInterval(
             () => this.enemiesController.spawnEnemy(),
-            (ENEMY_SPAWN_TIME * 0.7) / this.spawnPhase
+            ENEMY_SPAWN_TIME / 1 + 0.2 * this.currentPhase
         );
     }
 
@@ -130,7 +136,7 @@ export default class GameController {
         const upgrades = document.getElementsByClassName("upgrade");
         for (const upgrade of upgrades) {
             if (isCollision(upgrade, this.playerController.ship)) {
-                this.playerController.increaseWeaponCount();
+                this.playerController.increaseWeaponLevel();
                 upgrade.remove();
             }
         }
@@ -150,8 +156,8 @@ export default class GameController {
     }
 
     displayMenu() {
-        document.getElementById("gameOver").style.display = "flex";
-        document.getElementById("endButton").style.display = "block";
+        document.getElementById("game-over").style.display = "flex";
+        document.getElementById("end-button").style.display = "block";
         document.getElementById("main").style.cursor = "auto";
     }
 
