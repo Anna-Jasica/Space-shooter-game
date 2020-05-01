@@ -108,8 +108,8 @@ p {
 }
 
 .bullet {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     /* background-color: gold; */
     background: url("./images/bullet2.png");
     background-size: 100% 100%;
@@ -158,10 +158,9 @@ p {
     transform: translate(-50%, -50%);
     background: url("./images/explosion.png");
     background-size: 100% 100%;
+    animation: fadeout 1.5s;
     -webkit-animation: fadeout 1.5s;
-    /* Safari, Chrome and Opera > 12.1 */
     -moz-animation: fadeout 1.5s;
-    /* Firefox < 16 */
 }
 
 .upgrade {
@@ -171,8 +170,8 @@ p {
     transform: translate(-50%, -50%);
     background: url("./images/lightning.png");
     background-size: 100% 100%;
+    animation: fadeout 6s;
     -webkit-animation: fadeout 6s;
-    /* Safari, Chrome and Opera > 12.1 */
     -moz-animation: fadeout 6s;
 }
 
@@ -209,8 +208,6 @@ p {
 }
 
 .undraggable {
-    user-drag: none;
-    user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
     -webkit-user-select: none;
@@ -227,10 +224,3 @@ button#stop-play {
     border-style: solid;
     margin-top: 5px;
 }
-
-// #game-over button {
-//     border-radius: 10px;
-//     font-size: 40px;
-//     border: solid yellow;
-//     color: yellow;
-// }

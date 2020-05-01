@@ -113,9 +113,12 @@ export class EnemiesController {
             enemy.setAttribute("direction", Direction.LEFT);
         } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
             let directions = [Direction.LEFT, Direction.TOP, Direction.DOWN];
-            if (enemy.y < this.windowInnerHeight * 0.2) {
+            if (enemy.y < window.innerHeight * 0.3) {
                 directions.splice(directions.indexOf(Direction.TOP), 1);
-            } else if (enemy.y > this.windowInnerHeight * 0.2) {
+            } else if (
+                enemy.y >
+                window.innerHeight - window.innerHeight * 0.3
+            ) {
                 directions.splice(directions.indexOf(Direction.DOWN), 1);
             }
             const direction =
