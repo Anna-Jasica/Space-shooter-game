@@ -5,28 +5,33 @@ body {
 }
 
 #main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    // display: flex;
+    // justify-content: center;
+    // align-items: flex-start;
+    height: 100%;
+    width: 100%;
 }
 
 #scoreboard {
-    text-align: center;
-    position: fixed;
-    top: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
     color: yellow;
 }
 
-#currentHp {
+#scoreboard div {
+    text-align: center;
+    width: 200px;
+}
+
+#current-hp {
     text-align: center;
     position: fixed;
     top: 0;
     left: 10px;
-    color: yellow;
 }
 
-.hpUnit {
+#current-hp div.hp-unit {
     width: 50px;
     height: 50px;
     margin-right: 10px;
@@ -34,38 +39,36 @@ body {
     background-size: 100% 100%;
 }
 
-#weaponPower {
-    text-align: center;
-    position: fixed;
-    top: 0;
-    left: 200px;
-    color: yellow;
-}
-
-#startButton {
-    width: 30vw;
-    height: 20vh;
+.button {
+    width: 250px;
+    height: 150px;
     border-radius: 10px;
     font-size: 40px;
     cursor: pointer;
-    display: block;
 }
 
-#endButton {
-    width: 10vw;
-    height: 5vh;
-    border-radius: 10px;
+.small-button {
+    width: 150px;
+    height: 75px;
+    border-radius: 5px;
+    font-size: 20px;
     cursor: pointer;
-    position: fixed;
-    top: 65vh;
-    display: none;
+}
+
+.center {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
 }
 
 .bullet {
     width: 80px;
     height: 80px;
     /* background-color: gold; */
-    background: url("./images/bullet.png");
+    background: url("./images/bullet2.png");
     background-size: 100% 100%;
     position: fixed;
     transform: translate(-50%, -50%);
@@ -76,12 +79,22 @@ body {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 45px;
-    height: 45px;
-    /* background-color: red; */
-    background: url("./images/alien.png");
-    background-size: 100% 100%;
+    height: 50px;
+    // background-color: red;
+    background-image: url("./images/alien.png");
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-position: bottom center;
     position: fixed;
     transform: translate(-50%, -50%);
+}
+
+.progress-bar {
+    background-color: red;
+    height: 10px;
+    -webkit-transition: width 0.2s ease;
+    transition: width 0.2s ease;
 }
 
 .explosion {
@@ -104,6 +117,9 @@ body {
     transform: translate(-50%, -50%);
     background: url("./images/lightning.png");
     background-size: 100% 100%;
+    -webkit-animation: fadeout 6s;
+    /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadeout 6s;
 }
 
 @keyframes fadeout {
@@ -157,14 +173,22 @@ body {
     -ms-user-select: none;
 }
 
-#gameOver {
+#game-over {
     width: 30vw;
     height: 15vh;
-    border-radius: 10px;
-    font-size: 40px;
-    border: solid yellow;
-    color: yellow;
     display: none;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+}
+
+#game-over p {
+    border-radius: 10px;
+    border: solid yellow;
+    padding: 20px;
+    font-size: 40px;
+    color: yellow;
     text-align: center;
     padding-top: 7vh;
 }

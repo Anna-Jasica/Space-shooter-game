@@ -67,6 +67,21 @@ const config = {
                     },
                 ],
             },
+            {
+                test: /index\.html/,
+                use: [
+                    {
+                        // Using file-loader for these files
+                        loader: "file-loader",
+
+                        // In options we can set different things like format
+                        // and directory to save
+                        options: {
+                            name: "index.html",
+                        },
+                    },
+                ],
+            },
         ],
     },
     plugins: [
