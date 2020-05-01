@@ -4,15 +4,19 @@ import {
     isCollision,
     updateCurrentPhase,
 } from "../utils";
-import EnemiesController from "./enemiesController";
 import PlayerController from "./playerController";
+import EnemiesController from "./enemiesController";
+import BulletsController from "./bulletsController";
 import { Direction } from "../enums";
 import { ENEMY_SPAWN_TIME, PHASE_DURATION } from "../constants";
 
 export default class GameController {
     constructor() {
-        this.enemiesController = null;
+        this.windowInnerHeight = 0;
+        this.windowInnerWidth = 0;
         this.playerController = null;
+        this.enemiesController = null;
+        this.bulletsController = null;
         this.isGameRunning = false;
         this.frameNumber = 0;
         this.currentPhase = 1;
@@ -21,8 +25,16 @@ export default class GameController {
     }
 
     initState() {
+        this.windowInnerHeight = window.innerHeight;
+        this.windowInnerWidth = window.innerWidth;
         this.playerController = new PlayerController();
-        this.enemiesController = new EnemiesController();
+        this.enemiesController = new EnemiesController(
+            this.windowInnerHeight,
+            this.windowInnerWidth
+        );
+        this.bulletsController = new BulletsController(
+            this.playerController.ship.width
+        );
         this.frameNumber = 0;
         this.currentPhase = 1;
         updateCurrentPhase(this.currentPhase);
@@ -43,6 +55,9 @@ export default class GameController {
     }
 
     startSpawningEnemies() {
+        // for (let i = 0; i < 120; i++) {
+        //     this.enemiesController.spawnEnemy();
+        // }
         this.spawnIntervalId = setInterval(
             () => this.enemiesController.spawnEnemy(),
             ENEMY_SPAWN_TIME
@@ -62,16 +77,16 @@ export default class GameController {
     }
 
     addEventListeners() {
-        window.addEventListener("click", this.playerController.fire, true);
-        window.addEventListener("mousemove", this.playerController.shipTrack);
+        this.fireListener = (event) =>
+            this.bulletsController.createBullet(event);
+        this.moveListener = (event) => this.playerController.shipTrack(event);
+        window.addEventListener("click", this.fireListener, true);
+        window.addEventListener("mousemove", this.moveListener);
     }
 
     removeEventListeners() {
-        window.removeEventListener("click", this.playerController.fire, true);
-        window.removeEventListener(
-            "mousemove",
-            this.playerController.shipTrack
-        );
+        window.removeEventListener("click", this.fireListener, true);
+        window.removeEventListener("mousemove", this.moveListener);
     }
 
     update() {
@@ -92,7 +107,7 @@ export default class GameController {
     handleEnemies() {
         for (const enemy of this.enemiesController.enemies) {
             this.enemiesController.handleEnemyMove(enemy, this.frameNumber);
-            if (enemy.offsetLeft < 0) {
+            if (enemy.x < 0) {
                 this.playerController.decreaseCurrentHp();
                 enemy.remove();
             }
@@ -109,13 +124,12 @@ export default class GameController {
     }
 
     handleBullets() {
-        const bullets = document.getElementsByClassName("bullet");
-        for (const bullet of bullets) {
+        for (const bullet of this.bulletsController.bullets) {
             move(bullet, Direction.RIGHT, this.playerController.weapon.speed);
 
             for (const enemy of this.enemiesController.enemies) {
                 if (isCollision(enemy, bullet)) {
-                    bullet.remove();
+                    this.bulletsController.removeBullet(bullet);
                     if (
                         this.enemiesController.isEnemyKilled(
                             enemy,
@@ -124,10 +138,17 @@ export default class GameController {
                     ) {
                         this.playerController.increaseKillCount();
                     }
+                    return;
                 }
             }
-            if (!isElementWithinScreen(bullet)) {
-                bullet.remove();
+            if (
+                !isElementWithinScreen(
+                    bullet,
+                    this.windowInnerHeight,
+                    this.windowInnerWidth
+                )
+            ) {
+                this.bulletsController.removeBullet(bullet);
             }
         }
     }
@@ -165,8 +186,9 @@ export default class GameController {
         Array.from(this.enemiesController.enemies).forEach((enemy) =>
             enemy.remove()
         );
-        const bullets = document.getElementsByClassName("bullet");
-        Array.from(bullets).forEach((enemy) => enemy.remove());
+        Array.from(this.bulletsController.bullets).forEach((bullet) =>
+            bullet.remove()
+        );
         setTimeout(() => {
             const upgrades = document.getElementsByClassName("upgrade");
             Array.from(upgrades).forEach((upgrade) => upgrade.remove());

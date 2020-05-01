@@ -1,28 +1,24 @@
 import { Direction } from "../enums";
 
-export function getHeight(element) {
-    return element.offsetHeight;
-}
-
-export function getWidth(element) {
-    return element.offsetWidth;
-}
-
 export function isCollision(element1, element2) {
     return !(
-        Math.abs(element1.offsetLeft - element2.offsetLeft) >
-            (element1.offsetWidth / 2 + element2.offsetWidth / 2) / 2 ||
-        Math.abs(element1.offsetTop - element2.offsetTop) >
-            (element1.offsetHeight / 2 + element2.offsetHeight / 2) / 2
+        Math.abs(element1.x - element2.x) >
+            (element1.width / 2 + element2.width / 2) / 2 ||
+        Math.abs(element1.y - element2.y) >
+            (element1.height / 2 + element2.height / 2) / 2
     );
 }
 
-export function isElementWithinScreen(element) {
+export function isElementWithinScreen(
+    element,
+    windowInnerHeight,
+    windowInnerWidth
+) {
     if (
-        element.offsetLeft > window.innerWidth ||
-        element.offsetLeft < 0 ||
-        element.offsetTop > window.innerHeight ||
-        element.offsetTop < 0
+        element.x > windowInnerWidth ||
+        element.x < 0 ||
+        element.y > windowInnerHeight ||
+        element.y < 0
     ) {
         return false;
     }
@@ -54,16 +50,20 @@ export function updateCurrentPhase(value) {
 export function move(element, direction, distance) {
     switch (direction) {
         case Direction.LEFT:
-            element.style.left = `${element.offsetLeft - distance}px`;
+            element.x -= distance;
+            element.style.left = `${element.x}px`;
             break;
         case Direction.RIGHT:
-            element.style.left = `${element.offsetLeft + distance}px`;
+            element.x += distance;
+            element.style.left = `${element.x}px`;
             break;
         case Direction.TOP:
-            element.style.top = `${element.offsetTop - distance}px`;
+            element.y -= distance;
+            element.style.top = `${element.y}px`;
             break;
         case Direction.DOWN:
-            element.style.top = `${element.offsetTop + distance}px`;
+            element.y += distance;
+            element.style.top = `${element.y}px`;
             break;
     }
 }
