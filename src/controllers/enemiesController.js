@@ -51,9 +51,12 @@ export default class EnemiesController {
         } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
             const enemyYPosition = enemy.offsetTop;
             let directions = [Direction.LEFT, Direction.TOP, Direction.DOWN];
-            if (enemyYPosition < window.innerHeight * 0.2) {
+            if (enemyYPosition < window.innerHeight * 0.3) {
                 directions.splice(directions.indexOf(Direction.TOP), 1);
-            } else if (enemyYPosition > window.innerHeight * 0.2) {
+            } else if (
+                enemyYPosition >
+                window.innerHeight - window.innerHeight * 0.3
+            ) {
                 directions.splice(directions.indexOf(Direction.DOWN), 1);
             }
             const direction =
