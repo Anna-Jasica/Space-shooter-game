@@ -85,7 +85,7 @@ export default class GameController {
         clearInterval(this.spawnIntervalId);
         this.spawnIntervalId = setInterval(
             () => this.enemiesController.spawnEnemy(),
-            ENEMY_SPAWN_TIME / 1 + 0.2 * this.currentPhase
+            ENEMY_SPAWN_TIME / (1 + 0.2 * this.currentPhase)
         );
     }
 

@@ -179,6 +179,7 @@ body {
     display: none;
     align-items: center;
     justify-content: center;
+    flex-wrap: nowrap;
     flex-direction: column;
 }
 
@@ -188,6 +189,7 @@ body {
     padding: 20px;
     font-size: 40px;
     color: yellow;
+    text-align: center;
 }
 
 // #game-over button {
