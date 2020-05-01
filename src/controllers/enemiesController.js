@@ -1,4 +1,4 @@
-import { move, getHeight, getRandomInteger } from "../utils";
+import { move, getRandomInteger } from "../utils";
 import { Direction } from "../enums";
 import {
     ENEMY_HP,
@@ -8,9 +8,15 @@ import {
 } from "../constants";
 
 export default class EnemiesController {
-    constructor() {
+    constructor(windowInnerHeight, windowInnerWidth) {
         this.enemies = [];
         this.enemyId = 0;
+
+        this.windowInnerHeight = windowInnerHeight;
+        this.windowInnerWidth = windowInnerWidth;
+        const sizes = this.getEnemySizes();
+        this.enemyHeight = sizes.height;
+        this.enemyWidth = sizes.width;
     }
 
     spawnEnemy() {
@@ -19,17 +25,30 @@ export default class EnemiesController {
         enemy.setAttribute("hp", ENEMY_HP);
         enemy.setAttribute("max-hp", ENEMY_HP);
 
+        enemy.id = this.enemyId++;
+        enemy.y = getRandomInteger(
+            this.enemyHeight / 2,
+            this.windowInnerHeight - this.enemyHeight / 2
+        );
+        enemy.x = this.windowInnerWidth;
+        enemy.height = this.enemyHeight;
+        enemy.width = this.enemyWidth;
+
+        enemy.style.top = `${enemy.y}px`;
+        enemy.style.left = `${enemy.x}px`;
+
+        this.enemies.push(enemy);
         enemy.appendChild(this.createHpBar());
         document.getElementById("main").appendChild(enemy);
-        enemy.style.top = `${getRandomInteger(
-            getHeight(enemy) / 2,
-            window.innerHeight - getHeight(enemy) / 2
-        )}px`;
-        enemy.style.left = `${window.innerWidth}px`;
+    }
 
-        enemy.id = this.enemyId++;
-        this.enemies.push(enemy);
+    getEnemySizes() {
+        const enemy = document.createElement("div");
+        enemy.classList.add("enemy");
         document.getElementById("main").appendChild(enemy);
+        const sizes = { width: enemy.offsetWidth, height: enemy.offsetHeight };
+        enemy.remove();
+        return sizes;
     }
 
     createHpBar() {
@@ -49,13 +68,12 @@ export default class EnemiesController {
             move(enemy, Direction.LEFT, ENEMY_SPEED);
             enemy.setAttribute("direction", Direction.LEFT);
         } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
-            const enemyYPosition = enemy.offsetTop;
             let directions = [Direction.LEFT, Direction.TOP, Direction.DOWN];
-            if (enemyYPosition < window.innerHeight * 0.3) {
+            if (enemy.y < window.innerHeight * 0.3) {
                 directions.splice(directions.indexOf(Direction.TOP), 1);
             } else if (
-                enemyYPosition >
-                window.innerHeight - window.innerHeight * 0.3
+                enemy.y >
+                this.windowInnerHeight - this.windowInnerHeight * 0.3
             ) {
                 directions.splice(directions.indexOf(Direction.DOWN), 1);
             }

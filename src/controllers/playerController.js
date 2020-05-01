@@ -1,14 +1,13 @@
-import {
-    getWidth,
-    updateHp,
-    updateWeaponPower,
-    updateKillCount,
-} from "../utils";
+import { updateHp, updateWeaponPower, updateKillCount } from "../utils";
 import { PLAYER_HP, BULLET_SPEED, UPGRADE_POWER } from "../constants";
 
 export default class PlayerController {
     constructor() {
         this.ship = document.getElementById("ship");
+        this.displayShip();
+        this.ship.height = this.ship.offsetHeight;
+        this.ship.width = this.ship.offsetWidth;
+
         this.currentHp = PLAYER_HP;
         this.weapon = {
             level: 1,
@@ -19,25 +18,16 @@ export default class PlayerController {
             shotEnemies: 0,
         };
 
-        this.displayShip();
         updateHp(this.currentHp);
         updateWeaponPower(this.weapon.power);
         updateKillCount(this.stats.shotEnemies);
     }
 
     shipTrack(event) {
-        let positionX = event.clientX;
-        let positionY = event.clientY;
-        this.ship.style.top = `${positionY}px`;
-        this.ship.style.left = `${positionX}px`;
-    }
-
-    fire(event) {
-        const bullet = document.createElement("div");
-        bullet.classList.add("bullet", "undraggable");
-        document.getElementById("main").appendChild(bullet);
-        bullet.style.top = `${event.y}px`;
-        bullet.style.left = `${event.x + getWidth(this.ship) / 2}px`;
+        this.ship.y = event.clientY;
+        this.ship.x = event.clientX;
+        this.ship.style.top = `${this.ship.y}px`;
+        this.ship.style.left = `${this.ship.x}px`;
     }
 
     displayShip() {
