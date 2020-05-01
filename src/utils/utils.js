@@ -17,10 +17,6 @@ export function isCollision(element1, element2) {
     );
 }
 
-export function displayKillCount(value) {
-    document.getElementById("killCount").innerText = value;
-}
-
 export function isElementWithinScreen(element) {
     if (
         element.offsetLeft > window.innerWidth ||
@@ -33,18 +29,26 @@ export function isElementWithinScreen(element) {
     return true;
 }
 
-export function displayHp(value) {
-    const currentHpDiv = document.getElementById("currentHp");
+export function updateHp(value) {
+    const currentHpDiv = document.getElementById("current-hp");
     currentHpDiv.innerHTML = "";
     for (let i = 0; i < value; i++) {
         const ship = document.createElement("div");
-        ship.classList.add("hpUnit");
+        ship.classList.add("hp-unit");
         currentHpDiv.appendChild(ship);
     }
 }
 
-export function displayWeaponPower(value) {
-    document.getElementById("weaponPowerCount").innerText = value;
+export function updateKillCount(value) {
+    document.getElementById("killCount").innerText = value;
+}
+
+export function updateWeaponPower(value) {
+    document.getElementById("weaponLevel").innerText = value;
+}
+
+export function updateCurrentPhase(value) {
+    document.getElementById("currentPhase").innerText = value;
 }
 
 export function move(element, direction, distance) {
