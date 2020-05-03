@@ -12,16 +12,25 @@ body {
     width: 100%;
 }
 
-#scoreboard {
+p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#gui {
     display: flex;
     align-items: flex-start;
     justify-content: center;
     color: yellow;
+    border: solid yellow;
+    width: 800px;
+    margin: auto;
 }
 
-#scoreboard div {
+#gui div {
     text-align: center;
     width: 200px;
+    margin: 5px;
 }
 
 #current-hp {
@@ -191,6 +200,18 @@ body {
     color: yellow;
     text-align: center;
 }
+
+button#stop-play {
+    background: url("./images/play-stop.png");
+    background-size: cover;
+    width: 35px;
+    height: 35px;
+    border-color: yellow;
+    border-radius: 100%;
+    border-style: solid;
+    margin-top: 5px;
+}
+
 
 // #game-over button {
 //     border-radius: 10px;

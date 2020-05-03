@@ -7,6 +7,7 @@ import {
 import PlayerController from "./playerController";
 import EnemiesController from "./enemiesController";
 import BulletsController from "./bulletsController";
+import AudioController from "./audioController";
 import { Direction } from "../enums";
 import { ENEMY_SPAWN_TIME, PHASE_DURATION } from "../constants";
 
@@ -17,11 +18,13 @@ export default class GameController {
         this.playerController = null;
         this.enemiesController = null;
         this.bulletsController = null;
+        this.audioController = new AudioController();
         this.isGameRunning = false;
         this.frameNumber = 0;
         this.currentPhase = 1;
         this.spawnIntervalId = null;
         this.changePhaseIntervalId = null;
+        console.log("miau");
     }
 
     initState() {
@@ -100,7 +103,7 @@ export default class GameController {
         clearInterval(this.spawnIntervalId);
         this.spawnIntervalId = setInterval(
             () => this.enemiesController.spawnEnemy(),
-            ENEMY_SPAWN_TIME / (1 + 0.2 * this.currentPhase)
+            ENEMY_SPAWN_TIME / (1 + 0.3 * this.currentPhase)
         );
     }
 
