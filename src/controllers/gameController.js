@@ -3,6 +3,14 @@ import {
     isElementWithinScreen,
     isCollision,
     updateCurrentPhase,
+    showGameOver,
+    showMenu,
+    showCursor,
+    hideGameOver,
+    hideMenu,
+    hideShip,
+    hideCursor,
+    changeStartButtonToFlyAgain,
 } from "../utils";
 import {
     PlayerController,
@@ -51,7 +59,9 @@ export class GameController {
     startGame(click) {
         this.initState();
         this.playerController.shipTrack(click);
-        this.hideMenu();
+        hideGameOver();
+        hideMenu();
+        hideCursor();
         this.addEventListeners();
 
         if (!this.isGameRunning) {
@@ -63,9 +73,6 @@ export class GameController {
     }
 
     startSpawningEnemies() {
-        // for (let i = 0; i < 120; i++) {
-        //     this.enemiesController.spawnEnemy();
-        // }
         this.spawnIntervalId = setInterval(
             () => this.enemiesController.spawnEnemy(),
             ENEMY_SPAWN_TIME
@@ -75,20 +82,6 @@ export class GameController {
             updateCurrentPhase(this.currentPhase);
             this.decreaseEnemySpawnTime();
         }, PHASE_DURATION);
-    }
-
-    displayMenu() {
-        document.getElementById("menu").style.display = "grid";
-    }
-
-    hideMenu() {
-        document.getElementById("menu").style.display = "none";
-        this.hideCursor();
-        document.getElementById("game-over").style.display = "none";
-    }
-
-    hideCursor() {
-        document.getElementById("menu").style.cursor = "none";
     }
 
     addEventListeners() {
@@ -205,16 +198,14 @@ export class GameController {
     }
 
     gameOver() {
-        this.playerController.hideShip();
+        hideShip();
         this.removeEventListeners();
         this.stopSpawningEnemies();
         this.removeAllElementsFromHtml();
-        this.changeStartButtonToFlyAgain();
-        this.displayMenu();
-    }
-
-    changeStartButtonToFlyAgain() {
-        document.getElementById("startButton").innerText = "Fly Again!";
+        changeStartButtonToFlyAgain();
+        showGameOver();
+        showMenu();
+        showCursor();
     }
 
     stopSpawningEnemies() {

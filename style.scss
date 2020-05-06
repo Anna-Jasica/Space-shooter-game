@@ -4,13 +4,22 @@ body {
     overflow: hidden;
 }
 
+#main {
+    height: 100vh;
+    width: 100vw;
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 2fr 1fr;
+    grid-template-rows: 0.25fr 1fr 2fr 0.25fr;
+    justify-content: stretch;
+}
+
 #menu {
+    grid-area: 3 / 3 / 4 / 4;
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 100px, 200px, auto;
-    height: 50%;
-    width: 30%;
-    z-index: 10000;
+    // height: 50%;
+    // width: 30%;
 }
 
 p {
@@ -19,13 +28,14 @@ p {
 }
 
 #gui {
+    grid-area: 1 / 2 / 1 / 5;
     display: flex;
     align-items: flex-start;
     justify-content: center;
     color: yellow;
     border: solid yellow;
-    width: 800px;
-    margin: auto;
+    // width: 800px;
+    // margin: auto;
 }
 
 #gui div {
@@ -47,6 +57,32 @@ p {
     margin-right: 10px;
     background: url("./images/ship.png");
     background-size: 100% 100%;
+}
+
+#ship {
+    cursor: none;
+    display: none;
+    width: 80px;
+    height: 80px;
+    position: fixed;
+    transform: translate(-50%, -50%);
+    background: url("./images/ship.png");
+    background-size: 100% 100%;
+}
+
+#game-over {
+    grid-area: 2 / 3 / 3 / 4;
+    align-self: center;
+    display: none;
+}
+
+#game-over p {
+    border-radius: 10px;
+    border: solid yellow;
+    padding: 20px;
+    font-size: 40px;
+    color: yellow;
+    text-align: center;
 }
 
 .button {
@@ -172,17 +208,6 @@ p {
     }
 }
 
-#ship {
-    cursor: none;
-    display: none;
-    width: 80px;
-    height: 80px;
-    position: fixed;
-    transform: translate(-50%, -50%);
-    background: url("./images/ship.png");
-    background-size: 100% 100%;
-}
-
 .undraggable {
     user-drag: none;
     user-select: none;
@@ -190,25 +215,6 @@ p {
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-}
-
-#game-over {
-    width: 30vw;
-    height: 15vh;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: nowrap;
-    flex-direction: column;
-}
-
-#game-over p {
-    border-radius: 10px;
-    border: solid yellow;
-    padding: 20px;
-    font-size: 40px;
-    color: yellow;
-    text-align: center;
 }
 
 button#stop-play {

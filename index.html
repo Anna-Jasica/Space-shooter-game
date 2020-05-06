@@ -13,38 +13,40 @@
 
 </head>
 
-<body id="main">
-    <div id="menu" class="center">
-        <button id="startButton" class="button" onclick="startGame(event)">Start Game</button>
-        <button id="musicButton" class="button" onclick="togglePlay()">Switch Music On</button>
-        <button id="settingButton" class="button">Settings</button>
-    </div>
-    <div id="gui">
-        <div id="current-hp"></div>
+<body>
+    <div id="main">
+        <div id="menu">
+            <button id="startButton" class="button" onclick="startGame(event)">Start Game</button>
+            <button id="musicButton" class="button" onclick="togglePlay()">Switch Music On</button>
+            <button id="settingButton" class="button">Settings</button>
+        </div>
+        <div id="gui">
+            <div id="current-hp"></div>
 
-        <div>
-            Weapon's power:
-            <p id="weaponLevel">1</p>
+            <div>
+                Weapon's power:
+                <p id="weaponLevel">1</p>
+            </div>
+
+            <div>
+                Shot enemies:
+                <p id="killCount">0</p>
+            </div>
+
+            <div>
+                Phase:
+                <p id="currentPhase">1</p>
+            </div>
+
         </div>
 
-        <div>
-            Shot enemies:
-            <p id="killCount">0</p>
-        </div>
 
-        <div>
-            Phase:
-            <p id="currentPhase">1</p>
+        <div id="game-over">
+            <p>GAME OVER!</p>
         </div>
-
     </div>
 
     <div id="ship" class="undraggable"></div>
-
-    <div id="game-over" class="center">
-        <p>GAME OVER!</p>
-    </div>
-
     <audio id="myAudio" src="music/Music.mp3" preload="auto" loop autoplay></audio>
 </body>
 <script src="./main.js"></script>

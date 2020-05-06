@@ -71,3 +71,39 @@ export function move(element, direction, distance) {
 export function getRandomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function changeStartButtonToFlyAgain() {
+    document.getElementById("startButton").innerText = "Fly Again!";
+}
+
+export function showMenu() {
+    document.getElementById("menu").style.display = "grid";
+}
+
+export function hideMenu() {
+    document.getElementById("menu").style.display = "none";
+}
+
+export function showGameOver() {
+    document.getElementById("game-over").style.display = "block";
+}
+
+export function hideGameOver() {
+    document.getElementById("game-over").style.display = "none";
+}
+
+export function hideCursor() {
+    document.getElementById("main").style.cursor = "none";
+}
+
+export function showCursor() {
+    document.getElementById("main").style.cursor = "auto";
+}
+
+export function showShip() {
+    document.getElementById("ship").style.display = "block";
+}
+
+export function hideShip() {
+    document.getElementById("ship").style.display = "none";
+}

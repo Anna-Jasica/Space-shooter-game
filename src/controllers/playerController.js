@@ -1,10 +1,15 @@
-import { updateHp, updateWeaponPower, updateKillCount } from "../utils";
+import {
+    updateHp,
+    updateWeaponPower,
+    updateKillCount,
+    showShip,
+} from "../utils";
 import { PLAYER_HP, BULLET_SPEED, UPGRADE_POWER } from "../constants";
 
 export class PlayerController {
     constructor() {
         this.ship = document.getElementById("ship");
-        this.displayShip();
+        showShip();
         this.ship.height = this.ship.offsetHeight;
         this.ship.width = this.ship.offsetWidth;
 
@@ -28,14 +33,6 @@ export class PlayerController {
         this.ship.x = event.clientX;
         this.ship.style.top = `${this.ship.y}px`;
         this.ship.style.left = `${this.ship.x}px`;
-    }
-
-    displayShip() {
-        this.ship.style.display = "block";
-    }
-
-    hideShip() {
-        this.ship.style.display = "none";
     }
 
     increaseWeaponLevel() {
