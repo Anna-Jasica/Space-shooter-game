@@ -1,5 +1,5 @@
-export * from "./gameController";
-export * from "./enemiesController";
-export * from "./playerController";
-export * from "./bulletsController";
-export * from "./audioController";
+export { GameController } from "./gameController";
+export { EnemiesController } from "./enemiesController";
+export { PlayerController } from "./playerController";
+export { BulletsController } from "./bulletsController";
+export { AudioController } from "./audioController";

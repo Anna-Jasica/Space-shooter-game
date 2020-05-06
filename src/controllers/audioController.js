@@ -1,4 +1,4 @@
-export default class AudioController {
+export class AudioController {
     constructor() {
         this.player = document.getElementById("myAudio");
         this.isPlaying = false;
@@ -8,7 +8,15 @@ export default class AudioController {
     }
 
     togglePlay() {
-        this.isPlaying ? this.player.pause() : this.player.play();
+        if (this.isPlaying) {
+            this.player.pause();
+            document.getElementById("musicButton").innerHTML =
+                "Switch Music On";
+        } else {
+            this.player.play();
+            document.getElementById("musicButton").innerHTML =
+                "Switch Music Off";
+        }
         this.isPlaying = !this.isPlaying;
     }
 }

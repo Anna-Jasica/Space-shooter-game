@@ -1,6 +1,6 @@
 import "../style.scss";
 import "../index.html";
-import GameController from "./controllers/gameController";
+import { GameController } from "./controllers/gameController";
 
 window.startGame = function (event) {
     window.gameController.startGame(event);

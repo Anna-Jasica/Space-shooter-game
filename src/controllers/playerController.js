@@ -1,7 +1,7 @@
 import { updateHp, updateWeaponPower, updateKillCount } from "../utils";
 import { PLAYER_HP, BULLET_SPEED, UPGRADE_POWER } from "../constants";
 
-export default class PlayerController {
+export class PlayerController {
     constructor() {
         this.ship = document.getElementById("ship");
         this.displayShip();

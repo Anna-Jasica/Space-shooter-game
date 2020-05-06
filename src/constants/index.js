@@ -1,4 +1,4 @@
-export const ENEMY_SPEED = 1;
+export const ENEMY_SPEED = 3;
 export const BULLET_SPEED = 15;
 export const ENEMY_BULLET_SPEED = 5;
 export const ENEMY_SPAWN_TIME = 1500;

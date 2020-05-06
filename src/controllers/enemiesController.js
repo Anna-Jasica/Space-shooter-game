@@ -8,7 +8,7 @@ import {
     ENEMY_SHOT_CHANCE,
 } from "../constants";
 
-export default class EnemiesController {
+export class EnemiesController {
     constructor(windowInnerHeight, windowInnerWidth) {
         this.enemies = [];
         this.enemyId = 0;

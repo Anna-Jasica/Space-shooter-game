@@ -4,12 +4,13 @@ body {
     overflow: hidden;
 }
 
-#main {
-    // display: flex;
-    // justify-content: center;
-    // align-items: flex-start;
-    height: 100%;
-    width: 100%;
+#menu {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 100px, 200px, auto;
+    height: 50%;
+    width: 30%;
+    z-index: 10000;
 }
 
 p {
@@ -49,19 +50,16 @@ p {
 }
 
 .button {
-    width: 250px;
-    height: 150px;
-    border-radius: 10px;
+    margin-bottom: 20px;
     font-size: 40px;
     cursor: pointer;
 }
 
 .small-button {
-    width: 150px;
-    height: 75px;
     border-radius: 5px;
     font-size: 20px;
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .center {
@@ -175,6 +173,7 @@ p {
 }
 
 #ship {
+    cursor: none;
     display: none;
     width: 80px;
     height: 80px;
@@ -222,7 +221,6 @@ button#stop-play {
     border-style: solid;
     margin-top: 5px;
 }
-
 
 // #game-over button {
 //     border-radius: 10px;

@@ -4,15 +4,20 @@ import {
     isCollision,
     updateCurrentPhase,
 } from "../utils";
-import PlayerController from "./playerController";
-import EnemiesController from "./enemiesController";
-import BulletsController from "./bulletsController";
-import AudioController from "./audioController";
+import {
+    PlayerController,
+    EnemiesController,
+    BulletsController,
+    AudioController,
+} from "./index";
 import { Direction } from "../enums";
-import { ENEMY_SPAWN_TIME, PHASE_DURATION } from "../constants";
-import { ENEMY_BULLET_SPEED } from "../constants";
+import {
+    ENEMY_SPAWN_TIME,
+    PHASE_DURATION,
+    ENEMY_BULLET_SPEED,
+} from "../constants";
 
-export default class GameController {
+export class GameController {
     constructor() {
         this.windowInnerHeight = 0;
         this.windowInnerWidth = 0;
@@ -72,11 +77,18 @@ export default class GameController {
         }, PHASE_DURATION);
     }
 
+    displayMenu() {
+        document.getElementById("menu").style.display = "grid";
+    }
+
     hideMenu() {
-        document.getElementById("start-button").style.display = "none";
-        document.getElementById("end-button").style.display = "none";
+        document.getElementById("menu").style.display = "none";
+        this.hideCursor();
         document.getElementById("game-over").style.display = "none";
-        document.getElementById("main").style.cursor = "none";
+    }
+
+    hideCursor() {
+        document.getElementById("menu").style.cursor = "none";
     }
 
     addEventListeners() {
@@ -197,18 +209,17 @@ export default class GameController {
         this.removeEventListeners();
         this.stopSpawningEnemies();
         this.removeAllElementsFromHtml();
+        this.changeStartButtonToFlyAgain();
         this.displayMenu();
+    }
+
+    changeStartButtonToFlyAgain() {
+        document.getElementById("startButton").innerText = "Fly Again!";
     }
 
     stopSpawningEnemies() {
         clearInterval(this.spawnIntervalId);
         clearInterval(this.changePhaseIntervalId);
-    }
-
-    displayMenu() {
-        document.getElementById("game-over").style.display = "flex";
-        document.getElementById("end-button").style.display = "block";
-        document.getElementById("main").style.cursor = "auto";
     }
 
     removeAllElementsFromHtml() {

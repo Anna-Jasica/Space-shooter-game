@@ -1,4 +1,4 @@
-export default class BulletsController {
+export class BulletsController {
     constructor(shipWidth) {
         this.bullets = [];
         this.bulletId = 0;
