@@ -5,18 +5,26 @@ import {
     ENEMY_DIRECTION_REPEAT,
     UPGRADE_SPAWN_CHANCE,
     ENEMY_SPEED,
+    ENEMY_SHOT_CHANCE,
 } from "../constants";
 
 export default class EnemiesController {
     constructor(windowInnerHeight, windowInnerWidth) {
         this.enemies = [];
         this.enemyId = 0;
+        this.bullets = [];
+        this.bulletId = 0;
 
         this.windowInnerHeight = windowInnerHeight;
         this.windowInnerWidth = windowInnerWidth;
-        const sizes = this.getEnemySizes();
-        this.enemyHeight = sizes.height;
-        this.enemyWidth = sizes.width;
+
+        const enemySizes = this.getEnemySizes();
+        this.enemyHeight = enemySizes.height;
+        this.enemyWidth = enemySizes.width;
+
+        const bulletSizes = this.getBulletSizes();
+        this.bulletHeight = bulletSizes.height;
+        this.bulletWidth = bulletSizes.width;
     }
 
     spawnEnemy() {
@@ -40,6 +48,42 @@ export default class EnemiesController {
         this.enemies.push(enemy);
         enemy.appendChild(this.createHpBar());
         document.getElementById("main").appendChild(enemy);
+    }
+
+    createEnemyBullet(enemy) {
+        const bullet = document.createElement("div");
+        bullet.classList.add("enemyBullet", "undraggable");
+
+        bullet.id = this.bulletId++;
+        bullet.y = enemy.y;
+        bullet.x = enemy.x - this.enemyWidth / 2;
+        bullet.height = this.bulletHeight;
+        bullet.width = this.bulletWidth;
+
+        bullet.style.top = `${bullet.y}px`;
+        bullet.style.left = `${bullet.x}px`;
+        this.bullets.push(bullet);
+        document.getElementById("main").appendChild(bullet);
+    }
+
+    removeEnemyBullet(bullet) {
+        this.bullets.splice(
+            this.bullets.findIndex((obj) => obj.id === bullet.id),
+            1
+        );
+        bullet.remove();
+    }
+
+    getBulletSizes() {
+        const bullet = document.createElement("div");
+        bullet.classList.add("enemyBullet");
+        document.getElementById("main").appendChild(bullet);
+        const sizes = {
+            width: bullet.offsetWidth,
+            height: bullet.offsetHeight,
+        };
+        bullet.remove();
+        return sizes;
     }
 
     getEnemySizes() {
@@ -81,7 +125,10 @@ export default class EnemiesController {
         } else {
             move(enemy, enemy.getAttribute("direction"), ENEMY_SPEED);
         }
-        // }
+        const possibility = getRandomInteger(1, 300);
+        if (possibility <= ENEMY_SHOT_CHANCE) {
+            this.createEnemyBullet(enemy);
+        }
     }
 
     isEnemyKilled(enemy, weaponPower) {

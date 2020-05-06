@@ -83,6 +83,17 @@ p {
     transform: translate(-50%, -50%);
 }
 
+.enemyBullet {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    /* background-color: gold; */
+    background: url("./images/red-star.png");
+    background-size: 100% 100%;
+    position: fixed;
+    transform: translate(-50%, -50%);
+}
+
 .enemy {
     display: block;
     -moz-box-sizing: border-box;

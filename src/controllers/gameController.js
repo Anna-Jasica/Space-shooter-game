@@ -10,6 +10,7 @@ import BulletsController from "./bulletsController";
 import AudioController from "./audioController";
 import { Direction } from "../enums";
 import { ENEMY_SPAWN_TIME, PHASE_DURATION } from "../constants";
+import { ENEMY_BULLET_SPEED } from "../constants";
 
 export default class GameController {
     constructor() {
@@ -24,7 +25,6 @@ export default class GameController {
         this.currentPhase = 1;
         this.spawnIntervalId = null;
         this.changePhaseIntervalId = null;
-        console.log("miau");
     }
 
     initState() {
@@ -95,6 +95,7 @@ export default class GameController {
     update() {
         this.handleEnemies();
         this.handleBullets();
+        this.handleEnemyBullets();
         this.handleUpgrades();
         window.requestAnimationFrame(() => this.update());
     }
@@ -156,6 +157,31 @@ export default class GameController {
         }
     }
 
+    handleEnemyBullets() {
+        for (const bullet of this.enemiesController.bullets) {
+            move(bullet, Direction.LEFT, ENEMY_BULLET_SPEED);
+
+            if (isCollision(this.playerController.ship, bullet)) {
+                this.playerController.decreaseCurrentHp();
+                this.enemiesController.removeEnemyBullet(bullet);
+                if (this.playerController.currentHp === 0) {
+                    this.gameOver();
+                    return;
+                }
+            }
+
+            if (
+                !isElementWithinScreen(
+                    bullet,
+                    this.windowInnerHeight,
+                    this.windowInnerWidth
+                )
+            ) {
+                this.enemiesController.removeEnemyBullet(bullet);
+            }
+        }
+    }
+
     handleUpgrades() {
         const upgrades = document.getElementsByClassName("upgrade");
         for (const upgrade of upgrades) {
@@ -189,7 +215,11 @@ export default class GameController {
         Array.from(this.enemiesController.enemies).forEach((enemy) =>
             enemy.remove()
         );
+        this.enemiesController.enemies = [];
         Array.from(this.bulletsController.bullets).forEach((bullet) =>
+            bullet.remove()
+        );
+        Array.from(this.enemiesController.bullets).forEach((bullet) =>
             bullet.remove()
         );
         setTimeout(() => {
