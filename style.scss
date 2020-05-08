@@ -118,11 +118,11 @@ p {
 }
 
 .enemyBullet {
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     border-radius: 100%;
     /* background-color: gold; */
-    background: url("./images/red-star.png");
+    background: url("./images/red-star2.png");
     background-size: 100% 100%;
     position: fixed;
     transform: translate(-50%, -50%);
