@@ -118,6 +118,7 @@ export class GameController {
             this.enemiesController.handleEnemyMove(enemy, this.frameNumber);
             if (enemy.x < 0) {
                 this.playerController.decreaseCurrentHp();
+                this.enemiesController.removeEnemy(enemy);
                 enemy.remove();
             }
             if (isCollision(this.playerController.ship, enemy)) {

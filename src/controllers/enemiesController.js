@@ -154,10 +154,7 @@ export class EnemiesController {
     handleEnemyKill(enemy) {
         enemy.firstElementChild.remove();
 
-        this.enemies.splice(
-            this.enemies.findIndex((obj) => obj.id === enemy.id),
-            1
-        );
+        this.removeEnemy(enemy);
         enemy.classList.remove("enemy");
         enemy.classList.add("explosion");
 
@@ -171,5 +168,12 @@ export class EnemiesController {
         } else {
             setTimeout(() => enemy.remove(), 1000);
         }
+    }
+
+    removeEnemy(enemy) {
+        this.enemies.splice(
+            this.enemies.findIndex((obj) => obj.id === enemy.id),
+            1
+        );
     }
 }
