@@ -82,6 +82,18 @@ const config = {
                     },
                 ],
             },
+            {
+                test: /\.mp3$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            outputPath: "audio",
+                            name: "[name].[ext]",
+                        },
+                    },
+                ],
+            },
         ],
     },
     plugins: [

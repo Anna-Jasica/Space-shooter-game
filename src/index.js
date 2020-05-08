@@ -1,5 +1,6 @@
 import "../style.scss";
 import "../index.html";
+import "../audio/music.mp3";
 import { GameController } from "./controllers/gameController";
 
 window.startGame = function (event) {
