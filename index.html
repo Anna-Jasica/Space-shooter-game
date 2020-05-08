@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Space shooter</title>
+    <meta name="description" content="Play Space-shooter Game!" />
+    <meta name="keywords" content="play, game, space, aliens" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+    <div id="main">
+        <div id="menu">
+            <button id="startButton" class="button" onclick="startGame(event)">Start Game</button>
+            <button id="musicButton" class="button" onclick="togglePlay()">Switch Music On</button>
+            <button id="settingButton" class="button">Settings</button>
+        </div>
+        <div id="gui">
+            <div id="current-hp"></div>
+
+            <div>
+                Weapon's power:
+                <p id="weaponLevel">1</p>
+            </div>
+
+            <div>
+                Shot enemies:
+                <p id="killCount">0</p>
+            </div>
+
+            <div>
+                Phase:
+                <p id="currentPhase">1</p>
+            </div>
+
+        </div>
+
+
+        <div id="game-over">
+            <p>GAME OVER!</p>
+        </div>
+    </div>
+
+    <div id="ship" class="undraggable"></div>
+    <audio id="myAudio" src="audio/music.mp3" preload="auto" loop autoplay></audio>
+</body>
+<script src="./main.js"></script>
+
+</html>
