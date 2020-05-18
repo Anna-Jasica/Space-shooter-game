@@ -16,10 +16,13 @@ body {
 #menu {
     grid-area: 3 / 3 / 4 / 4;
     display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 100px, 200px, auto;
-    // height: 50%;
-    // width: 30%;
+    align-self: start;
+}
+
+#settings-menu {
+    grid-area: 3 / 3 / 4 / 4;
+    display: none;
+    align-self: start;
 }
 
 p {

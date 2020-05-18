@@ -18,7 +18,11 @@
         <div id="menu">
             <button id="startButton" class="button" onclick="startGame(event)">Start Game</button>
             <button id="musicButton" class="button" onclick="togglePlay()">Switch Music On</button>
-            <button id="settingButton" class="button">Settings</button>
+            <button id="settingButton" class="button" onclick="showSettings()">Settings</button>
+        </div>
+        <div id="settings-menu">
+            <button id="backButton" class="button" onclick="showMenu()">Back</button>
+            <button id="toggleMovementButton" class="button" onclick="toggleMovementControl()">Use Keyboard</button>
         </div>
         <div id="gui">
             <div id="current-hp"></div>

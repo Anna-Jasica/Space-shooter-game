@@ -84,6 +84,14 @@ export function hideMenu() {
     document.getElementById("menu").style.display = "none";
 }
 
+export function showSettings() {
+    document.getElementById("settings-menu").style.display = "grid";
+}
+
+export function hideSettings() {
+    document.getElementById("settings-menu").style.display = "none";
+}
+
 export function showGameOver() {
     document.getElementById("game-over").style.display = "block";
 }
