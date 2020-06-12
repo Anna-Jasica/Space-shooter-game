@@ -8,6 +8,30 @@ import {
     ENEMY_SHOT_CHANCE,
 } from "../constants";
 
+// class Enemy {
+//     static id = 0;
+//     constructor(id) {
+//         element = document.createElement("div");
+//         console.log(enemy);
+//         Object.assign(this, enemy);
+//         console.log(this);
+//         this.classList.add("enemy", "progress");
+//         this.setAttribute("hp", ENEMY_HP);
+//         this.setAttribute("max-hp", ENEMY_HP);
+//         this.y = getRandomInteger(
+//             this.enemyHeight / 2,
+//             this.windowInnerHeight - this.enemyHeight / 2
+//         );
+//         this.x = this.windowInnerWidth;
+//         this.height = this.enemyHeight;
+//         this.width = this.enemyWidth;
+
+//         this.style.top = `${this.y}px`;
+//         this.style.left = `${this.x}px`;
+//         document.getElementById("main").appendChild(this);
+//     }
+// }
+
 export class EnemiesController {
     constructor(windowInnerHeight, windowInnerWidth) {
         this.enemies = [];
@@ -45,6 +69,7 @@ export class EnemiesController {
         enemy.style.top = `${enemy.y}px`;
         enemy.style.left = `${enemy.x}px`;
 
+        // this.enemies.push(new Enemy(this.enemyId++));
         this.enemies.push(enemy);
         enemy.appendChild(this.createHpBar());
         document.getElementById("main").appendChild(enemy);
@@ -113,12 +138,9 @@ export class EnemiesController {
             enemy.setAttribute("direction", Direction.LEFT);
         } else if (frameNumber % ENEMY_DIRECTION_REPEAT === 0) {
             let directions = [Direction.LEFT, Direction.TOP, Direction.DOWN];
-            if (enemy.y < window.innerHeight * 0.3) {
+            if (enemy.y < this.windowInnerHeight * 0.3) {
                 directions.splice(directions.indexOf(Direction.TOP), 1);
-            } else if (
-                enemy.y >
-                window.innerHeight - window.innerHeight * 0.3
-            ) {
+            } else if (enemy.y > this.windowInnerHeight * 0.7) {
                 directions.splice(directions.indexOf(Direction.DOWN), 1);
             }
             const direction =

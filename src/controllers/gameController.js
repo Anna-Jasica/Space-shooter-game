@@ -17,6 +17,8 @@ import {
     EnemiesController,
     BulletsController,
     AudioController,
+    SettingsController,
+    PlayerMoveController,
 } from "./index";
 import { Direction } from "../enums";
 import {
@@ -32,18 +34,27 @@ export class GameController {
         this.playerController = null;
         this.enemiesController = null;
         this.bulletsController = null;
+        this.playerMoveController = null;
         this.audioController = new AudioController();
+        this.settingsController = new SettingsController();
         this.isGameRunning = false;
         this.frameNumber = 0;
         this.currentPhase = 1;
         this.spawnIntervalId = null;
         this.changePhaseIntervalId = null;
+
+        // this.mousePosition = { x: 0, y: 0 };
+        // this.switchControlToKeyboard();
     }
 
     initState() {
         this.windowInnerHeight = window.innerHeight;
         this.windowInnerWidth = window.innerWidth;
         this.playerController = new PlayerController();
+        this.playerMoveController = new PlayerMoveController(
+            this.windowInnerHeight,
+            this.windowInnerWidth
+        );
         this.enemiesController = new EnemiesController(
             this.windowInnerHeight,
             this.windowInnerWidth
@@ -58,7 +69,7 @@ export class GameController {
 
     startGame(click) {
         this.initState();
-        this.playerController.shipTrack(click);
+        this.playerMoveController.moveShipToCursor(click);
         hideGameOver();
         hideMenu();
         hideCursor();
@@ -85,25 +96,68 @@ export class GameController {
     }
 
     addEventListeners() {
-        this.fireListener = (event) =>
-            this.bulletsController.createBullet(event);
-        this.moveListener = (event) => this.playerController.shipTrack(event);
+        this.fireListener = (event) => {
+            if (event.type === "keyup") {
+                if (event.code === "Space") {
+                    this.bulletsController.createBullet(
+                        this.playerController.ship
+                    );
+                }
+            } else {
+                this.bulletsController.createBullet(this.playerController.ship);
+            }
+        };
+        this.moveListener = (event) => {
+            // this.mousePosition = { x: event.x, y: event.y };
+
+            if (!window.useKeyboard) {
+                this.playerMoveController.moveShipToCursor(event);
+            }
+        };
         window.addEventListener("click", this.fireListener, true);
+        window.addEventListener("keyup", this.fireListener, true);
         window.addEventListener("mousemove", this.moveListener);
     }
 
     removeEventListeners() {
         window.removeEventListener("click", this.fireListener, true);
+        window.removeEventListener("keyup", this.fireListener, true);
         window.removeEventListener("mousemove", this.moveListener);
     }
 
     update() {
+        this.playerMoveController.handleShipMove();
         this.handleEnemies();
         this.handleBullets();
         this.handleEnemyBullets();
         this.handleUpgrades();
         window.requestAnimationFrame(() => this.update());
     }
+
+    // handleShipMove() {
+    //  else {
+    //     const xDistance = Math.abs(
+    //         this.mousePosition.x - this.playerController.ship.x
+    //     );
+    //     const yDistance = Math.abs(
+    //         this.mousePosition.y - this.playerController.ship.y
+    //     );
+    //     move(
+    //         this.playerController.ship,
+    //         Direction.RIGHT,
+    //         this.mousePosition.x > this.playerController.ship.x
+    //             ? Math.min(PLAYER_SHIP_SPEED, xDistance)
+    //             : -Math.min(PLAYER_SHIP_SPEED, xDistance)
+    //     );
+    //     move(
+    //         this.playerController.ship,
+    //         Direction.DOWN,
+    //         this.mousePosition.y > this.playerController.ship.y
+    //             ? Math.min(PLAYER_SHIP_SPEED, yDistance)
+    //             : -Math.min(PLAYER_SHIP_SPEED, yDistance)
+    //     );
+    // }
+    // }
 
     decreaseEnemySpawnTime() {
         clearInterval(this.spawnIntervalId);

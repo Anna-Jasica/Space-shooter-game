@@ -2,9 +2,7 @@ export class AudioController {
     constructor() {
         this.player = document.getElementById("myAudio");
         this.isPlaying = false;
-        window.togglePlay = () => {
-            this.togglePlay();
-        };
+        window.togglePlay = () => this.togglePlay();
     }
 
     togglePlay() {

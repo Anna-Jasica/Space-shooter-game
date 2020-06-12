@@ -28,13 +28,6 @@ export class PlayerController {
         updateKillCount(this.stats.shotEnemies);
     }
 
-    shipTrack(event) {
-        this.ship.y = event.clientY;
-        this.ship.x = event.clientX;
-        this.ship.style.top = `${this.ship.y}px`;
-        this.ship.style.left = `${this.ship.x}px`;
-    }
-
     increaseWeaponLevel() {
         this.weapon.level++;
         this.weapon.power += UPGRADE_POWER;

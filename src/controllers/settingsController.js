@@ -2,7 +2,7 @@ import { showMenu, hideMenu, showSettings, hideSettings } from "../utils";
 
 export class SettingsController {
     constructor() {
-        this.useKeyboard = false;
+        window.useKeyboard = false;
         window.toggleMovementControl = () => this.toggleMovementControl();
         window.showSettings = () => this.showSettings();
         window.showMenu = () => this.showMenu();
@@ -19,10 +19,9 @@ export class SettingsController {
     }
 
     toggleMovementControl() {
-        this.useKeyboard = !this.useKeyboard;
-        document.getElementById("toggleMovementButton").innerHTML = this
-            .useKeyboard
-            ? "Use Mouse"
-            : "Use Keyboard";
+        window.useKeyboard = !window.useKeyboard;
+        document.getElementById(
+            "toggleMovementButton"
+        ).innerHTML = window.useKeyboard ? "Use Mouse" : "Use Keyboard";
     }
 }
